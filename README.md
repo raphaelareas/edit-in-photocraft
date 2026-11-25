@@ -29,10 +29,10 @@ Shortcut: select the image and press **⌘⌥P** (Ctrl+Alt+P) to run the last pl
 
 **From the Figma Community:** _(link coming soon)_
 
-**From the code (development mode), in Figma desktop:**
-1. Download this repository (green **Code** button > **Download ZIP**) and unzip it somewhere permanent.
+**From GitHub (development mode), in Figma desktop:**
+1. Download [`photocraft-on-figma-plugin.zip`](https://github.com/raphaelareas/photocraft-on-figma/releases/latest/download/photocraft-on-figma-plugin.zip) and unzip it somewhere permanent.
 2. In Figma: **Plugins > Development > Import plugin from manifest…**
-3. Pick `plugin/manifest.json`.
+3. Pick `manifest.json` from the unzipped folder.
 
 ## Privacy
 
@@ -82,9 +82,9 @@ A editada entra por cima, no painel **Fill** da camada, e a original fica logo a
 fechado, como no "Remover fundo" do Figma. Atalho: selecione a imagem e use **⌘⌥P** (Ctrl+Alt+P)
 para rodar o último plugin de novo.
 
-**Instalar:** pela Comunidade do Figma _(link em breve)_ ou pelo código: baixe o repositório
-(**Code** > **Download ZIP**), descompacte num lugar fixo e, no Figma desktop, use **Plugins >
-Development > Import plugin from manifest…** escolhendo `plugin/manifest.json`.
+**Instalar:** pela Comunidade do Figma _(link em breve)_ ou pelo GitHub: baixe o
+[zip do plugin](https://github.com/raphaelareas/photocraft-on-figma/releases/latest/download/photocraft-on-figma-plugin.zip), descompacte num lugar fixo e, no Figma desktop, use **Plugins >
+Development > Import plugin from manifest…** escolhendo o `manifest.json`.
 
 **Privacidade:** a imagem vai do Figma para o editor e volta, tudo no seu computador. Nenhum servidor
 recebe ou guarda suas imagens.
