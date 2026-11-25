@@ -67,14 +67,15 @@
   .curto { display: none; }
 
   /* Hero, tudo centralizado */
-  .hero { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 8px 0 12px; min-height: 0; }
+  .hero { display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 0;
+    padding: clamp(8px, calc((100dvh - 760px) / 3), 90px) 0 12px; }
   .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 14px; color: var(--texto-2);
     font: 600 12px/1 Inter, system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase; }
   .eyebrow i { width: 8px; height: 8px; border-radius: 50%; background: var(--grad); box-shadow: 0 0 0 4px rgba(143, 107, 255, .18), 0 0 14px rgba(143, 107, 255, .8); }
   h1 { font: 600 clamp(36px, 3.9vw, 56px)/1.05 "Inter Tight", Inter, system-ui, sans-serif; letter-spacing: -.035em; margin: 0 0 16px; max-width: 880px; }
   h1 { margin-bottom: 14px; }
   h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .sub { color: var(--texto-2); font-size: 17px; max-width: 640px; margin: 0 0 22px; }
+  .sub { color: var(--texto-2); font-size: 17px; max-width: 720px; margin: 0 0 22px; text-wrap: balance; }
   .acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 8px; }
   .btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 50px; padding: 0 22px;
     border-radius: 999px; white-space: nowrap; font: 600 15px Inter, system-ui, sans-serif; border: 0; cursor: pointer;
@@ -95,8 +96,8 @@
   .numero span { display: block; font-size: 12px; color: var(--texto-3); }
 
   /* Palco: a pilha fica no centro e, com o mouse, as placas se abrem para os lados */
-  .palco { position: relative; flex: 1; width: 100%; min-height: 250px; outline: none; order: 1; }
-  .orbita { position: absolute; left: 50%; top: calc(50% - 50px); border-radius: 50%; border: 1px solid rgba(255, 255, 255, .06);
+  .palco { position: relative; flex: 1; width: 100%; min-height: 220px; outline: none; order: 1; }
+  .orbita { position: absolute; left: 50%; top: var(--centro, 40%); border-radius: 50%; border: 1px solid rgba(255, 255, 255, .06);
     transform: translate(-50%, -50%) rotateX(70deg); pointer-events: none; }
   .orbita.o1 { width: 760px; height: 760px; }
   .orbita.o2 { width: 480px; height: 480px; border-color: rgba(143, 107, 255, .14); }
@@ -104,7 +105,7 @@
     animation: piscar 3.2s ease-in-out infinite; pointer-events: none; }
   @keyframes piscar { 50% { opacity: .35; } }
 
-  .cena { position: absolute; left: 50%; top: calc(50% - 50px); width: 300px; height: 300px; margin: -150px 0 0 -150px;
+  .cena { position: absolute; left: 50%; top: var(--centro, 40%); width: 300px; height: 300px; margin: -150px 0 0 -150px;
     perspective: 4200px; scale: var(--escala); transition: top .8s var(--ease); }
   .pilha { position: relative; width: 300px; height: 300px; transform-style: preserve-3d; transform: rotateX(57deg) rotateZ(-45deg); }
   .placa { position: absolute; inset: 0; border-radius: 34px; transform-style: preserve-3d;
@@ -131,7 +132,7 @@
   .p3 { --i: 0; --lado: 1; --cor: #c77dff; }
 
   /* Cartões: um embaixo de cada placa aberta, todos da mesma altura */
-  .cartoes { position: absolute; left: 50%; bottom: 6px; translate: -50% 0; display: grid;
+  .cartoes { position: absolute; left: 50%; top: var(--topo-cartoes, 70%); translate: -50% 0; display: grid;
     grid-template-columns: repeat(3, calc(var(--passo) - 24px)); gap: 24px; pointer-events: none; }
   .cartao { position: relative; padding: 14px 16px 15px; border-radius: 16px; text-align: left;
     background: rgba(18, 18, 30, .82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
@@ -140,7 +141,9 @@
   .palco.aberto .cartao { opacity: 1; transform: none; }
   .palco.aberto .c2 { transition-delay: .08s; }
   .palco.aberto .c3 { transition-delay: .16s; }
-  .cartao::after { content: ''; position: absolute; left: 50%; bottom: 100%; height: 22px; border-left: 1px dashed color-mix(in srgb, var(--cor) 70%, transparent); }
+  /* Linha que sai da borda de cima do cartão e encosta na ponta de baixo da sua camada */
+  .cartao::after { content: ''; position: absolute; left: 50%; bottom: 100%; height: var(--fio, 30px); border-left: 1px dashed color-mix(in srgb, var(--cor) 75%, transparent); }
+  .cartao::before { content: ''; position: absolute; left: calc(50% - 3px); top: calc(-1 * var(--fio, 30px) - 3px); width: 7px; height: 7px; border-radius: 50%; background: var(--cor); box-shadow: 0 0 10px var(--cor); }
   .cartao .topo { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
   .cartao .n { font: 700 11px/1 Inter, sans-serif; color: var(--texto-3); }
   .cartao b { font: 600 14.5px/1.3 "Inter Tight", Inter, sans-serif; }
@@ -148,7 +151,7 @@
     color: #fff; background: color-mix(in srgb, var(--cor) 35%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cor) 60%, transparent); }
   .cartao p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--texto-2); }
   .c1 { --cor: #5b8cff; } .c2 { --cor: #4f8dff; } .c3 { --cor: #c77dff; }
-  .dica { position: absolute; left: 50%; bottom: 34px; translate: -50% 0; display: flex; align-items: center; gap: 8px; margin: 0;
+  .dica { position: absolute; left: 50%; top: var(--topo-dica, 68%); translate: -50% 0; display: flex; align-items: center; gap: 8px; margin: 0;
     color: var(--texto-3); font-size: 12.5px; transition: opacity .3s; white-space: nowrap; pointer-events: none; }
   .dica svg { width: 14px; height: 14px; color: #a98bff; }
   .palco.aberto .dica { opacity: 0; }
@@ -172,10 +175,10 @@
     .orbita, .ponto, .dica { display: none; }
     .cena { position: relative; left: auto; top: auto; margin: 150px 0 120px; scale: .68; }
     .palco .placa, .palco.aberto .placa { transform: translate3d(0, 0, calc(var(--i) * 205px - 160px)); }
-    .cartoes { position: relative; left: auto; bottom: auto; translate: none; width: 100%; max-width: 480px;
+    .cartoes { position: relative; left: auto; top: auto; bottom: auto; translate: none; width: 100%; max-width: 480px;
       grid-template-columns: 1fr; grid-auto-rows: 1fr; gap: 12px; }
     .cartao { opacity: 1; transform: none; }
-    .cartao::after { display: none; }
+    .cartao::after, .cartao::before { display: none; }
     .rodape { text-align: center; }
     .linha-rodape, .amor, .links-rodape { justify-content: center; }
   }
@@ -403,13 +406,24 @@ abrir(false);
 function ajustar() {
   if (celular.matches) return;
   const r = palco.getBoundingClientRect();
-  const escala = Math.max(.4, Math.min(.72, (r.height - 120) / 300, r.width / 1300));
+  const altCartao = 84, folga = 34;
+  // Meia altura da placa na tela: diagonal (150 * 1,414) achatada pelo ângulo de 57°, mais a espessura.
+  const meia = (e) => (150 * 1.4142 * Math.cos(57 * Math.PI / 180) + 16) * e;
+  const escala = Math.max(.34, Math.min(.72, (r.height - altCartao - folga - 10) / (2 * meia(1) + 40), r.width / 1300));
   const passo = Math.min(360, Math.max(250, r.width / 3.4));
   const d = passo / (1.4142 * escala);
+  // Placas + linha + cartões formam um bloco centralizado no palco.
+  const bloco = 2 * meia(escala) + folga + altCartao;
+  const centro = Math.max(meia(escala) + 6, (r.height - bloco) / 2 + meia(escala));
+  const ponta = centro + meia(escala);
   const raiz = document.documentElement.style;
   raiz.setProperty('--escala', escala.toFixed(3));
   raiz.setProperty('--passo', passo.toFixed(0) + 'px');
   palco.style.setProperty('--d', d.toFixed(1) + 'px');
+  palco.style.setProperty('--centro', centro.toFixed(0) + 'px');
+  palco.style.setProperty('--topo-cartoes', (ponta + folga).toFixed(0) + 'px');
+  palco.style.setProperty('--fio', folga + 'px');
+  palco.style.setProperty('--topo-dica', (ponta + folga + 4).toFixed(0) + 'px');
 }
 ajustar();
 addEventListener('resize', ajustar);
