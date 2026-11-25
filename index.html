@@ -67,8 +67,7 @@
   .curto { display: none; }
 
   /* Hero, tudo centralizado */
-  .hero { display: flex; flex-direction: column; align-items: center; text-align: center; min-height: 0;
-    padding: clamp(8px, calc((100dvh - 760px) / 3), 90px) 0 12px; }
+  .hero { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; min-height: 0; padding: 12px 0; }
   .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 14px; color: var(--texto-2);
     font: 600 12px/1 Inter, system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase; }
   .eyebrow i { width: 8px; height: 8px; border-radius: 50%; background: var(--grad); box-shadow: 0 0 0 4px rgba(143, 107, 255, .18), 0 0 14px rgba(143, 107, 255, .8); }
@@ -88,7 +87,7 @@
   .btn-github { background: var(--vidro); color: var(--texto); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); }
   .btn-github:hover { background: rgba(255, 255, 255, .08); transform: translateY(-1px); }
 
-  .numeros { display: flex; justify-content: center; text-align: left; white-space: nowrap; order: 2; margin-top: 4px; }
+  .numeros { display: flex; justify-content: center; text-align: left; white-space: nowrap; order: 2; margin-top: 22px; }
   .numero { display: flex; align-items: center; gap: 10px; padding: 0 20px; border-right: 1px solid var(--linha); }
   .numero:last-child { border-right: 0; }
   .numero svg { width: 20px; height: 20px; color: var(--texto-2); flex: none; }
@@ -96,7 +95,7 @@
   .numero span { display: block; font-size: 12px; color: var(--texto-3); }
 
   /* Palco: a pilha fica no centro e, com o mouse, as placas se abrem para os lados */
-  .palco { position: relative; flex: 1; width: 100%; min-height: 220px; outline: none; order: 1; }
+  .palco { position: relative; flex: none; width: 100%; height: var(--alt-palco, 420px); outline: none; order: 1; margin-top: 18px; }
   .orbita { position: absolute; left: 50%; top: var(--centro, 40%); border-radius: 50%; border: 1px solid rgba(255, 255, 255, .06);
     transform: translate(-50%, -50%) rotateX(70deg); pointer-events: none; }
   .orbita.o1 { width: 760px; height: 760px; }
@@ -151,10 +150,9 @@
     color: #fff; background: color-mix(in srgb, var(--cor) 35%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cor) 60%, transparent); }
   .cartao p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--texto-2); }
   .c1 { --cor: #5b8cff; } .c2 { --cor: #4f8dff; } .c3 { --cor: #c77dff; }
-  .dica { position: absolute; left: 50%; top: var(--topo-dica, 68%); translate: -50% 0; display: flex; align-items: center; gap: 8px; margin: 0;
+  .dica { position: absolute; left: 50%; top: 0; translate: -50% 0; display: flex; align-items: center; gap: 8px; margin: 0;
     color: var(--texto-3); font-size: 12.5px; transition: opacity .3s; white-space: nowrap; pointer-events: none; }
   .dica svg { width: 14px; height: 14px; color: #a98bff; }
-  .palco.aberto .dica { opacity: 0; }
 
   /* Rodapé */
   .rodape { padding: 4px 0 18px; color: var(--texto-3); font-size: 12.5px; }
@@ -166,12 +164,26 @@
   .amor { display: flex; align-items: center; gap: 8px; }
   .links-rodape { display: flex; flex-wrap: wrap; gap: 6px 18px; }
 
+  /* Telas de computador mais baixas (ex.: notebook): texto e espaços mais compactos para sobrar lugar à pilha */
+  @media (min-width: 981px) and (max-height: 900px) {
+    .nav { height: 68px; }
+    .hero { padding: 4px 0; }
+    .eyebrow { margin-bottom: 10px; }
+    h1 { font-size: clamp(34px, 3.4vw, 46px); margin-bottom: 10px; }
+    .sub { font-size: 15.5px; margin-bottom: 16px; }
+    .btn { height: 46px; }
+    .palco { margin-top: 10px; }
+    .numeros { margin-top: 14px; }
+    .aviso-marcas { font-size: 11px; margin-bottom: 8px; }
+    .linha-rodape { padding-top: 8px; }
+    .rodape { padding-bottom: 12px; }
+  }
   /* Tablet e celular: pilha aberta na vertical e cartões em lista */
   @media (max-width: 980px) {
     .hero { padding-top: 12px; }
     .numeros { order: 0; margin: 14px 0 0; }
     .palco { order: 1; }
-    .palco { flex: none; display: flex; flex-direction: column; align-items: center; padding: 20px 0 8px; min-height: 0; }
+    .palco { flex: none; display: flex; flex-direction: column; align-items: center; padding: 20px 0 8px; min-height: 0; height: auto; margin-top: 0; }
     .orbita, .ponto, .dica { display: none; }
     .cena { position: relative; left: auto; top: auto; margin: 150px 0 120px; scale: .68; }
     .palco .placa, .palco.aberto .placa { transform: translate3d(0, 0, calc(var(--i) * 205px - 160px)); }
@@ -309,8 +321,8 @@ const TEXTOS = {
     figma: 'Figma Community', licenca: 'MIT License', privacidade: 'Privacy', embreve: 'Coming soon', github: 'Install from GitHub',
     estrelas: 'GitHub stars', downloads: 'Downloads', gratis: '100% free', atualizado: 'Updated {d}',
     c1t: 'Select an image', c1: 'Pick any layer with an image and run the plugin.',
-    c2t: 'Edit in PhotoCraft', c2: 'The editor opens right inside Figma: layers, masks, filters, PSD.',
-    c3t: 'Save, and it’s back', c3: 'The image updates in Figma. The original stays hidden in the same layer.',
+    c2t: 'Edit in PhotoCraft', c2: 'A full editor opens right inside Figma, with layers, masks and filters.',
+    c3t: 'Save, and it’s back', c3: 'Your edit is flattened into a PNG that replaces the image. The original stays hidden.',
     dica: 'Hover to see how it works', amor: 'Made with love and tokens',
     creditos: 'The editor is PhotoCraft, open source, by the ArtCraft team. This plugin is independent.', codigo: 'View the code',
     marcas: 'A free, independent community project, made to help designers. Not affiliated with, sponsored or endorsed by Figma, Inc. or the ArtCraft team. Figma and the Figma logo are trademarks of Figma, Inc., used here only to indicate compatibility. The PhotoCraft icon is part of PhotoCraft, used under its MIT/Apache 2.0 license. All trademarks belong to their owners.',
@@ -323,8 +335,8 @@ const TEXTOS = {
     figma: 'Comunidade do Figma', licenca: 'Licença MIT', privacidade: 'Privacidade', embreve: 'Em breve', github: 'Instalar pelo GitHub',
     estrelas: 'Estrelas no GitHub', downloads: 'Downloads', gratis: '100% gratuito', atualizado: 'Atualizado em {d}',
     c1t: 'Selecione uma imagem', c1: 'Escolha qualquer camada com imagem e rode o plugin.',
-    c2t: 'Edite no PhotoCraft', c2: 'O editor abre dentro do próprio Figma: camadas, máscaras, filtros, PSD.',
-    c3t: 'Salve, e volta pro Figma', c3: 'A imagem atualiza no Figma. A original fica oculta na mesma camada.',
+    c2t: 'Edite no PhotoCraft', c2: 'Um editor completo abre dentro do próprio Figma, com camadas, máscaras e filtros.',
+    c3t: 'Salve, e volta pro Figma', c3: 'A edição vira um PNG único que substitui a imagem. A original fica oculta.',
     dica: 'Passe o mouse para ver como funciona', amor: 'Feito com amor e tokens',
     creditos: 'O editor é o PhotoCraft, de código aberto, do time ArtCraft. Este plugin é independente.', codigo: 'Ver o código',
     marcas: 'Projeto gratuito e independente, feito para ajudar a comunidade de design. Sem vínculo, patrocínio ou aprovação da Figma, Inc. nem do time ArtCraft. Figma e o logo do Figma são marcas da Figma, Inc., usadas aqui só para indicar compatibilidade. O ícone do PhotoCraft faz parte do PhotoCraft e é usado sob a licença MIT/Apache 2.0 dele. Todas as marcas pertencem aos seus donos.',
@@ -337,8 +349,8 @@ const TEXTOS = {
     figma: 'Comunidad de Figma', licenca: 'Licencia MIT', privacidade: 'Privacidad', embreve: 'Próximamente', github: 'Instalar desde GitHub',
     estrelas: 'Estrellas en GitHub', downloads: 'Descargas', gratis: '100% gratis', atualizado: 'Actualizado el {d}',
     c1t: 'Selecciona una imagen', c1: 'Elige cualquier capa con imagen y ejecuta el plugin.',
-    c2t: 'Edita en PhotoCraft', c2: 'El editor se abre dentro de Figma: capas, máscaras, filtros, PSD.',
-    c3t: 'Guarda, y vuelve a Figma', c3: 'La imagen se actualiza en Figma. La original queda oculta en la misma capa.',
+    c2t: 'Edita en PhotoCraft', c2: 'Un editor completo se abre dentro de Figma, con capas, máscaras y filtros.',
+    c3t: 'Guarda, y vuelve a Figma', c3: 'La edición se une en un PNG que reemplaza la imagen. La original queda oculta.',
     dica: 'Pasa el mouse para ver cómo funciona', amor: 'Hecho con amor y tokens',
     creditos: 'El editor es PhotoCraft, de código abierto, del equipo ArtCraft. Este plugin es independiente.', codigo: 'Ver el código',
     marcas: 'Proyecto gratuito e independiente, hecho para ayudar a la comunidad de diseño. Sin vínculo, patrocinio ni aprobación de Figma, Inc. ni del equipo ArtCraft. Figma y el logo de Figma son marcas de Figma, Inc., usadas aquí solo para indicar compatibilidad. El ícono de PhotoCraft forma parte de PhotoCraft y se usa bajo su licencia MIT/Apache 2.0. Todas las marcas pertenecen a sus dueños.',
@@ -388,6 +400,7 @@ aplicar(salvo || (nav.startsWith('pt') ? 'pt' : nav.startsWith('es') ? 'es' : 'e
 document.getElementById('idioma').onchange = (e) => {
   aplicar(e.target.value);
   try { localStorage.setItem('idioma', idioma); } catch (x) {}
+  ajustar(); // o texto em outro idioma pode ocupar outra altura
 };
 
 // A pilha se abre com o mouse (ou com toque e teclado). No celular já fica aberta.
@@ -403,18 +416,25 @@ abrir(false);
 
 // Ajusta o tamanho da pilha ao espaço que sobra na tela, para a página caber sem rolagem.
 // A placa tem 300px; aberta, cada uma anda D na diagonal, o que na tela vira D * 1,414 * escala para o lado.
-function ajustar() {
+function ajustar(corte = 0) {
   if (celular.matches) return;
-  const r = palco.getBoundingClientRect();
-  const altCartao = 84, folga = 34;
+  const altCartao = 84, folga = 34, altDica = 30;
   // Meia altura da placa na tela: diagonal (150 * 1,414) achatada pelo ângulo de 57°, mais a espessura.
   const meia = (e) => (150 * 1.4142 * Math.cos(57 * Math.PI / 180) + 16) * e;
-  const escala = Math.max(.34, Math.min(.72, (r.height - altCartao - folga - 10) / (2 * meia(1) + 40), r.width / 1300));
-  const passo = Math.min(360, Math.max(250, r.width / 3.4));
+  // Fechada, a pilha sobe um pouco (as placas ficam empilhadas para cima).
+  const sobe = (e) => 2 * 26 * Math.sin(57 * Math.PI / 180) * e;
+  // Espaço que sobra na tela depois do menu, do texto, dos botões, dos números e do rodapé.
+  const altura = (sel) => document.querySelector(sel).getBoundingClientRect().height;
+  const acoes = document.querySelector('.acoes').getBoundingClientRect();
+  const topoTexto = document.querySelector('.eyebrow').getBoundingClientRect().top;
+  const margem = (sel, lado) => parseFloat(getComputedStyle(document.querySelector(sel))['margin' + lado]);
+  const fixo = altura('.nav') + altura('.rodape') + (acoes.bottom - topoTexto) + altura('.numeros') + margem('.numeros', 'Top') + margem('.palco', 'Top') + 24 + 30;
+  const sobra = innerHeight - fixo - corte;
+  const largura = palco.getBoundingClientRect().width;
+  const escala = Math.max(.3, Math.min(.72, (sobra - altDica - folga - altCartao) / (2 * meia(1) + sobe(1)), largura / 1300));
+  const passo = Math.min(360, Math.max(250, largura / 3.4));
   const d = passo / (1.4142 * escala);
-  // Placas + linha + cartões formam um bloco centralizado no palco.
-  const bloco = 2 * meia(escala) + folga + altCartao;
-  const centro = Math.max(meia(escala) + 6, (r.height - bloco) / 2 + meia(escala));
+  const centro = altDica + sobe(escala) + meia(escala) + 4;
   const ponta = centro + meia(escala);
   const raiz = document.documentElement.style;
   raiz.setProperty('--escala', escala.toFixed(3));
@@ -423,10 +443,14 @@ function ajustar() {
   palco.style.setProperty('--centro', centro.toFixed(0) + 'px');
   palco.style.setProperty('--topo-cartoes', (ponta + folga).toFixed(0) + 'px');
   palco.style.setProperty('--fio', folga + 'px');
-  palco.style.setProperty('--topo-dica', (ponta + folga + 4).toFixed(0) + 'px');
+  palco.style.setProperty('--alt-palco', (ponta + folga + altCartao + 4).toFixed(0) + 'px');
+  // Se ainda passou da tela, mede quanto passou e diminui a pilha só o necessário.
+  const passou = document.documentElement.scrollHeight - innerHeight;
+  if (passou > 0 && corte < 400 && escala > .3) ajustar(corte + passou + 2);
 }
 ajustar();
-addEventListener('resize', ajustar);
+if (document.fonts) document.fonts.ready.then(() => ajustar());
+addEventListener('resize', () => ajustar());
 celular.addEventListener('change', () => { ajustar(); abrir(false); });
 </script>
 </body>
