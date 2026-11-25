@@ -11,10 +11,12 @@
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#07070d">
 <link rel="icon" href="site/logo-ra.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" href="site/fontes/inter.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="site/fontes/inter-tight.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  /* Fontes servidas pelo próprio site (nada é carregado do Google) */
+  @font-face { font-family: Inter; font-weight: 100 900; font-display: swap; src: url(site/fontes/inter.woff2) format("woff2"); }
+  @font-face { font-family: "Inter Tight"; font-weight: 100 900; font-display: swap; src: url(site/fontes/inter-tight.woff2) format("woff2"); }
   :root {
     --fundo: #07070d; --texto: #f4f4f8; --texto-2: #a3a3b5; --texto-3: #6c6c80;
     --linha: rgba(255, 255, 255, .08); --vidro: rgba(255, 255, 255, .04);
@@ -39,7 +41,8 @@
     background-size: 56px 56px; opacity: .35;
     -webkit-mask: radial-gradient(70% 60% at 60% 40%, #000, transparent 75%); mask: radial-gradient(70% 60% at 60% 40%, #000, transparent 75%); }
 
-  .pagina { position: relative; z-index: 1; max-width: 1240px; margin: 0 auto; padding: 0 32px; }
+  .pagina { position: relative; z-index: 1; max-width: 1240px; margin: 0 auto; padding: 0 32px;
+    min-height: 100vh; min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
 
   /* Menu */
   .nav { display: flex; align-items: center; justify-content: space-between; height: 84px; }
@@ -61,16 +64,15 @@
   .btn-portfolio:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(143, 107, 255, .35); }
 
   /* Hero */
-  .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 32px; align-items: center;
-    min-height: calc(100vh - 84px - 72px); padding: 24px 0 40px; }
+  .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 32px; align-items: center; padding: 0; }
   .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 22px; color: var(--texto-2);
     font: 600 12px/1 Inter, system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase; }
   .eyebrow i { width: 8px; height: 8px; border-radius: 50%; background: var(--grad); box-shadow: 0 0 0 4px rgba(143, 107, 255, .18), 0 0 14px rgba(143, 107, 255, .8); }
   h1 { font: 600 clamp(40px, 5.2vw, 68px)/1.04 "Inter Tight", Inter, system-ui, sans-serif; letter-spacing: -.035em; margin: 0 0 22px; }
   h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .sub { color: var(--texto-2); font-size: 18px; max-width: 520px; margin: 0 0 34px; }
-  .acoes { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 44px; }
-  .btn { position: relative; display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 24px; border-radius: 999px;
+  .acoes { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 40px; }
+  .btn { position: relative; display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 22px; border-radius: 999px; white-space: nowrap;
     font: 600 15px Inter, system-ui, sans-serif; border: 0; cursor: pointer; transition: transform .2s var(--ease), box-shadow .2s, background .2s; }
   .btn svg { width: 18px; height: 18px; flex: none; }
   .btn-figma { background: var(--grad); color: #fff; opacity: .5; cursor: not-allowed; }
@@ -81,15 +83,15 @@
   .btn-github { background: var(--vidro); color: var(--texto); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); }
   .btn-github:hover { background: rgba(255, 255, 255, .08); transform: translateY(-1px); }
 
-  .numeros { display: flex; flex-wrap: wrap; row-gap: 14px; }
-  .numero { display: flex; align-items: center; gap: 12px; padding-right: 24px; margin-right: 24px; border-right: 1px solid var(--linha); }
+  .numeros { display: flex; flex-wrap: nowrap; row-gap: 14px; white-space: nowrap; }
+  .numero { display: flex; align-items: center; gap: 12px; padding-right: 20px; margin-right: 20px; border-right: 1px solid var(--linha); }
   .numero:last-child { border-right: 0; margin-right: 0; padding-right: 0; }
   .numero svg { width: 22px; height: 22px; color: var(--texto-2); flex: none; }
   .numero b { display: block; font: 600 16px/1.2 "Inter Tight", Inter, sans-serif; }
   .numero span { display: block; font-size: 12.5px; color: var(--texto-3); }
 
   /* Palco 3D */
-  .palco { position: relative; height: 660px; display: grid; place-items: center; outline: none; }
+  .palco { position: relative; height: 600px; display: grid; place-items: center; outline: none; }
   .orbita { position: absolute; left: 50%; top: 50%; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .06);
     transform: translate(-50%, -50%) rotateX(68deg); }
   .orbita.o1 { width: 560px; height: 560px; }
@@ -126,7 +128,7 @@
   .p2 { --i: 1; --cor: #4f8dff; }
   .p3 { --i: 0; --cor: #c77dff; }
 
-  .palco.aberto .placa { transform: translateZ(calc(var(--i) * 172px - 120px)); }
+  .palco.aberto .placa { transform: translateZ(calc(var(--i) * 166px - 140px)); }
 
   /* Cartões que explicam cada camada */
   .cartao { position: absolute; width: 250px; padding: 14px 16px 15px; border-radius: 16px;
@@ -143,9 +145,9 @@
     color: #fff; background: color-mix(in srgb, var(--cor) 35%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cor) 60%, transparent); }
   .cartao p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--texto-2); }
   .cartao::after { content: ''; position: absolute; top: 50%; width: 56px; border-top: 1px dashed color-mix(in srgb, var(--cor) 70%, transparent); }
-  .c1 { --cor: #5b8cff; right: 0; top: 40px; }
-  .c2 { --cor: #4f8dff; left: -40px; top: 420px; width: 250px; }
-  .c3 { --cor: #c77dff; right: 0; top: 450px; }
+  .c1 { --cor: #5b8cff; right: 0; top: 20px; }
+  .c2 { --cor: #4f8dff; left: -40px; top: 390px; width: 250px; }
+  .c3 { --cor: #c77dff; right: 0; top: 420px; }
   .c1::after, .c3::after { right: 100%; }
   .c2::after { left: 100%; }
   .dica { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px;
@@ -154,13 +156,14 @@
   .palco.aberto .dica { opacity: 0; }
 
   /* Rodapé */
-  .rodape { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; align-items: center;
-    padding: 22px 0 28px; border-top: 1px solid var(--linha); color: var(--texto-3); font-size: 13px; }
+  .rodape { padding: 8px 0 22px; color: var(--texto-3); font-size: 12.5px; }
+  .aviso-marcas { margin: 0 0 14px; font-size: 11.5px; line-height: 1.55; color: var(--texto-3); max-width: 1000px; }
+  .linha-rodape { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; align-items: center;
+    padding-top: 14px; border-top: 1px solid var(--linha); }
   .rodape a { color: var(--texto-2); }
   .rodape a:hover { color: var(--texto); }
   .amor { display: flex; align-items: center; gap: 8px; }
-  .aviso-marcas { flex-basis: 100%; margin: 4px 0 0; font-size: 11.5px; line-height: 1.55; color: var(--texto-3); max-width: 900px; }
-
+  .links-rodape { display: flex; flex-wrap: wrap; gap: 6px 18px; }
   @media (max-width: 980px) {
     .hero { grid-template-columns: 1fr; min-height: 0; padding-top: 16px; }
     .palco { height: auto; padding: 30px 0 20px; display: flex; flex-direction: column; align-items: center; }
@@ -180,6 +183,7 @@
     .sub { font-size: 16.5px; }
     .acoes .btn, .btn-figma-caixa { width: 100%; justify-content: center; }
     .numero { padding-right: 14px; margin-right: 14px; }
+    .numeros { flex-wrap: wrap; white-space: normal; }
     .cena { transform: scale(.68); margin: -20px 0 -40px; }
   }
   @media (prefers-reduced-motion: reduce) {
@@ -271,12 +275,19 @@
   </main>
 
   <footer class="rodape">
-    <span class="amor">
-      <svg width="13" height="11" viewBox="0 0 7 6" aria-hidden="true" fill="#ff5a6a" shape-rendering="crispEdges"><rect x="1" y="0" width="2" height="1"/><rect x="4" y="0" width="2" height="1"/><rect x="0" y="1" width="7" height="2"/><rect x="1" y="3" width="5" height="1"/><rect x="2" y="4" width="3" height="1"/><rect x="3" y="5" width="1" height="1"/></svg>
-      <span data-t="amor"></span> · <a href="https://raphaelareas.com/">@raphaelareas</a>
-    </span>
-    <span><span data-t="creditos"></span> <a href="https://github.com/raphaelareas/edit-in-photocraft" data-t="codigo"></a></span>
-    <p class="aviso-marcas" data-t="marcas"></p>
+    <p class="aviso-marcas"><span data-t="creditos"></span> <span data-t="marcas"></span></p>
+    <div class="linha-rodape">
+      <span class="amor">
+        <svg width="13" height="11" viewBox="0 0 7 6" aria-hidden="true" fill="#ff5a6a" shape-rendering="crispEdges"><rect x="1" y="0" width="2" height="1"/><rect x="4" y="0" width="2" height="1"/><rect x="0" y="1" width="7" height="2"/><rect x="1" y="3" width="5" height="1"/><rect x="2" y="4" width="3" height="1"/><rect x="3" y="5" width="1" height="1"/></svg>
+        <span data-t="amor"></span> · <a href="https://raphaelareas.com/">@raphaelareas</a>
+      </span>
+      <nav class="links-rodape" aria-label="Legal">
+        <span>© 2026 Raphael Arêas</span>
+        <a href="https://github.com/raphaelareas/edit-in-photocraft/blob/main/LICENSE" data-t="licenca"></a>
+        <a href="privacidade.html" data-t="privacidade"></a>
+        <a href="https://github.com/raphaelareas/edit-in-photocraft" data-t="codigo"></a>
+      </nav>
+    </div>
   </footer>
 </div>
 
@@ -286,7 +297,7 @@ const TEXTOS = {
     portfolio: 'View', portfolio2: ' my portfolio', eyebrow: 'Free plugin for Figma · Open source',
     titulo1: 'Edit images in PhotoCraft', titulo2: 'without leaving Figma.',
     sub: 'Select an image, open it in a full editor with layers, masks and filters, and hit ⌘S. It updates in Figma, and your original stays safe in the same layer.',
-    figma: 'Get it on Figma Community', embreve: 'Coming soon', github: 'Install from GitHub',
+    figma: 'Figma Community', licenca: 'MIT License', privacidade: 'Privacy', embreve: 'Coming soon', github: 'Install from GitHub',
     estrelas: 'GitHub stars', downloads: 'Downloads', gratis: '100% free', atualizado: 'Updated {d}',
     c1t: 'Select an image', c1: 'Pick any layer with an image and run the plugin.',
     c2t: 'Edit in PhotoCraft', c2: 'The editor opens right inside Figma: layers, masks, filters, PSD.',
@@ -300,7 +311,7 @@ const TEXTOS = {
     portfolio: 'Ver', portfolio2: ' meu portfólio', eyebrow: 'Plugin gratuito para o Figma · Código aberto',
     titulo1: 'Edite imagens no PhotoCraft', titulo2: 'sem sair do Figma.',
     sub: 'Selecione uma imagem, abra num editor completo, com camadas, máscaras e filtros, e aperte ⌘S. Ela atualiza no Figma, e a original fica guardada na mesma camada.',
-    figma: 'Instalar pela Comunidade do Figma', embreve: 'Em breve', github: 'Instalar pelo GitHub',
+    figma: 'Comunidade do Figma', licenca: 'Licença MIT', privacidade: 'Privacidade', embreve: 'Em breve', github: 'Instalar pelo GitHub',
     estrelas: 'Estrelas no GitHub', downloads: 'Downloads', gratis: '100% gratuito', atualizado: 'Atualizado em {d}',
     c1t: 'Selecione uma imagem', c1: 'Escolha qualquer camada com imagem e rode o plugin.',
     c2t: 'Edite no PhotoCraft', c2: 'O editor abre dentro do próprio Figma: camadas, máscaras, filtros, PSD.',
@@ -314,7 +325,7 @@ const TEXTOS = {
     portfolio: 'Ver', portfolio2: ' mi portafolio', eyebrow: 'Plugin gratuito para Figma · Código abierto',
     titulo1: 'Edita imágenes en PhotoCraft', titulo2: 'sin salir de Figma.',
     sub: 'Selecciona una imagen, ábrela en un editor completo, con capas, máscaras y filtros, y pulsa ⌘S. Se actualiza en Figma, y la original queda guardada en la misma capa.',
-    figma: 'Instalar desde la Comunidad de Figma', embreve: 'Próximamente', github: 'Instalar desde GitHub',
+    figma: 'Comunidad de Figma', licenca: 'Licencia MIT', privacidade: 'Privacidad', embreve: 'Próximamente', github: 'Instalar desde GitHub',
     estrelas: 'Estrellas en GitHub', downloads: 'Descargas', gratis: '100% gratis', atualizado: 'Actualizado el {d}',
     c1t: 'Selecciona una imagen', c1: 'Elige cualquier capa con imagen y ejecuta el plugin.',
     c2t: 'Edita en PhotoCraft', c2: 'El editor se abre dentro de Figma: capas, máscaras, filtros, PSD.',

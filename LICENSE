@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 @raphaelareas
+Copyright (c) 2026 Raphael Arêas (@raphaelareas)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -20,5 +20,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-This license covers plugin/, ponte.html and index.html. The editor/ folder is
-PhotoCraft by the ArtCraft team, under its own licenses (see editor/).
+This license covers plugin/, ponte.html, index.html and privacidade.html. The editor/ folder is
+PhotoCraft by the ArtCraft team, under its own licenses (see editor/). The fonts in
+site/fontes are Inter and Inter Tight, under the SIL Open Font License 1.1.

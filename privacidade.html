@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy · Edit in PhotoCraft</title>
+<meta name="theme-color" content="#07070d">
+<link rel="icon" href="site/logo-ra.png">
+<style>
+  @font-face { font-family: Inter; font-weight: 100 900; font-display: swap; src: url(site/fontes/inter.woff2) format("woff2"); }
+  @font-face { font-family: "Inter Tight"; font-weight: 100 900; font-display: swap; src: url(site/fontes/inter-tight.woff2) format("woff2"); }
+  :root { --fundo: #07070d; --texto: #f4f4f8; --texto-2: #a3a3b5; --texto-3: #6c6c80; --linha: rgba(255, 255, 255, .08); }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--fundo); color: var(--texto); font: 400 16px/1.7 Inter, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased; }
+  body::before { content: ''; position: fixed; inset: 0; pointer-events: none;
+    background: radial-gradient(40% 30% at 80% 0%, rgba(91, 108, 255, .16), transparent 70%), radial-gradient(30% 30% at 10% 10%, rgba(155, 92, 255, .10), transparent 70%); }
+  .pagina { position: relative; max-width: 720px; margin: 0 auto; padding: 0 24px 48px; }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 84px; }
+  .voltar { color: var(--texto-2); text-decoration: none; font-size: 14px; }
+  .voltar:hover { color: var(--texto); }
+  select { appearance: none; -webkit-appearance: none; background: transparent; color: var(--texto-2); border: 1px solid var(--linha);
+    border-radius: 999px; padding: 8px 14px; font: 500 13px Inter, system-ui, sans-serif; cursor: pointer; }
+  select option { background: #14141c; color: var(--texto); }
+  h1 { font: 600 clamp(32px, 5vw, 44px)/1.1 "Inter Tight", Inter, sans-serif; letter-spacing: -.03em; margin: 32px 0 8px; }
+  .data { color: var(--texto-3); font-size: 14px; margin: 0 0 32px; }
+  h2 { font: 600 19px/1.3 "Inter Tight", Inter, sans-serif; margin: 32px 0 8px; }
+  p, li { color: var(--texto-2); }
+  ul { padding-left: 20px; }
+  a { color: #a98bff; }
+  .bloco[hidden] { display: none; }
+</style>
+</head>
+<body>
+<div class="pagina">
+  <header class="nav">
+    <a class="voltar" href="./" id="voltar">← Edit in PhotoCraft</a>
+    <select id="idioma" aria-label="Language"><option value="en">EN</option><option value="pt">PT</option><option value="es">ES</option></select>
+  </header>
+
+  <main class="bloco" data-lang="en">
+    <h1>Privacy</h1>
+    <p class="data">Last updated: November 25, 2026</p>
+    <p>Edit in PhotoCraft is a free, independent plugin for Figma made by Raphael Arêas. In short: <strong>your images never leave your computer, and this site collects nothing about you.</strong></p>
+    <h2>Your images</h2>
+    <p>When you edit an image, it goes from Figma to the editor and back inside the plugin window, on your own computer. No server receives, stores or sees your images.</p>
+    <h2>This website and the editor</h2>
+    <ul>
+      <li>No cookies, no analytics, no ads, no tracking, no forms. That is why there is no cookie banner.</li>
+      <li>The site, the editor and the fonts are served by <a href="https://pages.github.com/">GitHub Pages</a>. Like any web host, GitHub may log technical data such as your IP address. See the <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">GitHub Privacy Statement</a>.</li>
+      <li>The numbers on the home page (stars, downloads, version) are loaded by your browser from the public GitHub API, under the same GitHub policy.</li>
+      <li>Your language choice is saved only in your browser (local storage), so the page remembers it. You can clear it anytime in your browser settings.</li>
+      <li>The LinkedIn, Instagram and GitHub buttons are plain links. Those sites have their own policies once you open them.</li>
+    </ul>
+    <h2>The plugin</h2>
+    <p>Inside Figma, the plugin saves only its own preferences (language, whether you saw the welcome screen) using Figma's local plugin storage on your computer, plus a small marker on the layers you edit so the next save updates the same image. Nothing is sent to the author.</p>
+    <h2>Contact</h2>
+    <p>Questions? Message me on <a href="https://www.linkedin.com/in/raphaelareas/">LinkedIn</a> or open an issue on <a href="https://github.com/raphaelareas/edit-in-photocraft/issues">GitHub</a>.</p>
+  </main>
+
+  <main class="bloco" data-lang="pt" hidden>
+    <h1>Privacidade</h1>
+    <p class="data">Atualizada em 25 de novembro de 2026</p>
+    <p>O Edit in PhotoCraft é um plugin gratuito e independente para o Figma, feito por Raphael Arêas. Resumindo: <strong>suas imagens nunca saem do seu computador, e este site não coleta nada sobre você.</strong></p>
+    <h2>Suas imagens</h2>
+    <p>Quando você edita uma imagem, ela vai do Figma para o editor e volta dentro da janela do plugin, no seu próprio computador. Nenhum servidor recebe, guarda ou vê suas imagens.</p>
+    <h2>Este site e o editor</h2>
+    <ul>
+      <li>Sem cookies, sem analytics, sem anúncios, sem rastreamento e sem formulários. Por isso não existe aviso de cookies.</li>
+      <li>O site, o editor e as fontes são servidos pelo <a href="https://pages.github.com/">GitHub Pages</a>. Como qualquer hospedagem, o GitHub pode registrar dados técnicos, como o seu endereço IP. Veja a <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">Declaração de Privacidade do GitHub</a>.</li>
+      <li>Os números da página inicial (estrelas, downloads, versão) são carregados pelo seu navegador direto da API pública do GitHub, sob a mesma política do GitHub.</li>
+      <li>A sua escolha de idioma fica guardada só no seu navegador (armazenamento local), para a página lembrar dela. Você pode apagar quando quiser nas configurações do navegador.</li>
+      <li>Os botões do LinkedIn, do Instagram e do GitHub são apenas links. Esses sites têm as próprias políticas quando você os abre.</li>
+    </ul>
+    <h2>O plugin</h2>
+    <p>Dentro do Figma, o plugin guarda só as próprias preferências (idioma e se você já viu a tela de boas-vindas) no armazenamento local de plugins do Figma, no seu computador, e uma pequena marcação nas camadas que você edita, para o próximo salvamento atualizar a mesma imagem. Nada é enviado ao autor.</p>
+    <h2>Contato</h2>
+    <p>Dúvidas? Fale comigo no <a href="https://www.linkedin.com/in/raphaelareas/">LinkedIn</a> ou abra uma issue no <a href="https://github.com/raphaelareas/edit-in-photocraft/issues">GitHub</a>.</p>
+  </main>
+
+  <main class="bloco" data-lang="es" hidden>
+    <h1>Privacidad</h1>
+    <p class="data">Actualizada el 25 de noviembre de 2026</p>
+    <p>Edit in PhotoCraft es un plugin gratuito e independiente para Figma, hecho por Raphael Arêas. En resumen: <strong>tus imágenes nunca salen de tu computadora, y este sitio no recopila nada sobre ti.</strong></p>
+    <h2>Tus imágenes</h2>
+    <p>Cuando editas una imagen, va de Figma al editor y vuelve dentro de la ventana del plugin, en tu propia computadora. Ningún servidor recibe, guarda ni ve tus imágenes.</p>
+    <h2>Este sitio y el editor</h2>
+    <ul>
+      <li>Sin cookies, sin analítica, sin anuncios, sin rastreo y sin formularios. Por eso no hay aviso de cookies.</li>
+      <li>El sitio, el editor y las fuentes se sirven desde <a href="https://pages.github.com/">GitHub Pages</a>. Como cualquier alojamiento, GitHub puede registrar datos técnicos, como tu dirección IP. Consulta la <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement">Declaración de Privacidad de GitHub</a>.</li>
+      <li>Los números de la página de inicio (estrellas, descargas, versión) los carga tu navegador desde la API pública de GitHub, bajo la misma política.</li>
+      <li>Tu elección de idioma se guarda solo en tu navegador (almacenamiento local), para que la página la recuerde. Puedes borrarla cuando quieras en la configuración del navegador.</li>
+      <li>Los botones de LinkedIn, Instagram y GitHub son solo enlaces. Esos sitios tienen sus propias políticas cuando los abres.</li>
+    </ul>
+    <h2>El plugin</h2>
+    <p>Dentro de Figma, el plugin guarda solo sus propias preferencias (idioma y si ya viste la pantalla de bienvenida) en el almacenamiento local de plugins de Figma, en tu computadora, y una pequeña marca en las capas que editas, para que el próximo guardado actualice la misma imagen. No se envía nada al autor.</p>
+    <h2>Contacto</h2>
+    <p>¿Dudas? Escríbeme en <a href="https://www.linkedin.com/in/raphaelareas/">LinkedIn</a> o abre un issue en <a href="https://github.com/raphaelareas/edit-in-photocraft/issues">GitHub</a>.</p>
+  </main>
+</div>
+<script>
+const voltar = { en: '← Edit in PhotoCraft', pt: '← Edit in PhotoCraft', es: '← Edit in PhotoCraft' };
+function aplicar(l) {
+  if (!voltar[l]) l = 'en';
+  document.documentElement.lang = l === 'pt' ? 'pt-BR' : l;
+  document.getElementById('idioma').value = l;
+  for (const b of document.querySelectorAll('.bloco')) b.hidden = b.dataset.lang !== l;
+  document.title = { en: 'Privacy', pt: 'Privacidade', es: 'Privacidad' }[l] + ' · Edit in PhotoCraft';
+}
+let salvo = null;
+try { salvo = localStorage.getItem('idioma'); } catch (e) {}
+const nav = (navigator.language || 'en').toLowerCase();
+aplicar(salvo || (nav.startsWith('pt') ? 'pt' : nav.startsWith('es') ? 'es' : 'en'));
+document.getElementById('idioma').onchange = (e) => {
+  aplicar(e.target.value);
+  try { localStorage.setItem('idioma', e.target.value); } catch (x) {}
+};
+</script>
+</body>
+</html>
