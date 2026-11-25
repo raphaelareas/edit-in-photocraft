@@ -1,5 +1,5 @@
 {
-  "name": "Editar no PhotoCraft by @raphaelareas",
+  "name": "Edit in PhotoCraft by @raphaelareas",
   "id": "editar-no-photocraft-web",
   "api": "1.0.0",
   "main": "code.js",
@@ -11,7 +11,7 @@
   "relaunchButtons": [
     {
       "command": "editar",
-      "name": "Editar no PhotoCraft"
+      "name": "Edit in PhotoCraft"
     }
   ],
   "networkAccess": {
@@ -21,6 +21,6 @@
     "devAllowedDomains": [
       "http://localhost:47616"
     ],
-    "reasoning": "Abre o editor de imagens PhotoCraft (versão web, código aberto) dentro do plugin. A imagem vai do Figma para o editor e volta, tudo no computador da pessoa."
+    "reasoning": "Opens the PhotoCraft image editor (open-source web version) inside the plugin. The image goes from Figma to the editor and back, all on the user's computer."
   }
 }

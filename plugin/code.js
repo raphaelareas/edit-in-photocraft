@@ -10,6 +10,34 @@ const TAMANHO = {
 };
 const AVISO_MS = 6000;
 
+// Avisos do rodapé do Figma em cada idioma. O idioma vem da janela do plugin (computador ou seletor).
+const TEXTOS = {
+  pt: {
+    selecione: 'Selecione uma camada com imagem e rode o Editar no PhotoCraft de novo.',
+    selecioneComecar: 'Selecione uma camada com imagem e clique em Começar.',
+    apagada: 'A camada que estava sendo editada foi apagada.',
+    mudou: 'A imagem de "{n}" mudou por fora. Feche e abra de novo.',
+    atualizada: '"{n}" atualizada às {h}. A original está guardada, oculta, na mesma camada.',
+  },
+  en: {
+    selecione: 'Select a layer with an image and run Edit in PhotoCraft again.',
+    selecioneComecar: 'Select a layer with an image and click Get started.',
+    apagada: 'The layer you were editing was deleted.',
+    mudou: 'The image in "{n}" changed outside the editor. Close and open it again.',
+    atualizada: '"{n}" updated at {h}. Your original is kept, hidden, in the same layer.',
+  },
+  es: {
+    selecione: 'Selecciona una capa con imagen y ejecuta Editar en PhotoCraft de nuevo.',
+    selecioneComecar: 'Selecciona una capa con imagen y haz clic en Empezar.',
+    apagada: 'La capa que estabas editando fue eliminada.',
+    mudou: 'La imagen de "{n}" cambió por fuera. Cierra y ábrela de nuevo.',
+    atualizada: '"{n}" actualizada a las {h}. La original se conserva, oculta, en la misma capa.',
+  },
+};
+let idioma = 'en';
+const T = (k, v) => TEXTOS[idioma][k].replace(/\{(\w)\}/g, (_, x) => (v && v[x]) || '');
+const LOCAL = { pt: 'pt-BR', en: 'en-US', es: 'es-ES' };
+
 figma.showUI(__html__, Object.assign({ visible: false, themeColors: true, title: 'Editar no PhotoCraft' }, TAMANHO.boasvindas));
 
 let alvo = null; // { no, hash, copia, nome }
@@ -20,7 +48,7 @@ const imagemDe = (no) =>
     : null;
 const selecaoOk = () => figma.currentPage.selection.length === 1 && !!imagemDe(figma.currentPage.selection[0]);
 const lerEdicao = (no) => { try { return JSON.parse(no.getPluginData('edicao') || '{}'); } catch (e) { return {}; } };
-const hora = () => new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+const hora = () => new Date().toLocaleTimeString(LOCAL[idioma], { hour: '2-digit', minute: '2-digit' });
 const ler = (k) => figma.clientStorage.getAsync(k);
 const gravar = (k, v) => figma.clientStorage.setAsync(k, v);
 
@@ -53,10 +81,10 @@ async function abrirEditor() {
 
 async function aplicar(bytes) {
   const no = alvo && alvo.no;
-  if (!no || no.removed) throw new Error('A camada que estava sendo editada foi apagada.');
+  if (!no || no.removed) throw new Error(T('apagada'));
   const fills = no.fills.slice();
   const i = fills.findIndex((p) => p.type === 'IMAGE' && p.imageHash === alvo.hash);
-  if (i < 0) throw new Error(`A imagem de "${alvo.nome}" mudou por fora. Feche e abra de novo.`);
+  if (i < 0) throw new Error(T('mudou', { n: alvo.nome }));
   const imagem = figma.createImage(bytes);
   if (alvo.copia === alvo.hash) {
     fills[i] = Object.assign({}, fills[i], { imageHash: imagem.hash });
@@ -68,7 +96,7 @@ async function aplicar(bytes) {
   no.setPluginData('edicao', JSON.stringify({ copia: imagem.hash }));
   alvo.hash = alvo.copia = imagem.hash;
   const quando = hora();
-  figma.notify(`"${alvo.nome}" atualizada às ${quando}. A original está guardada, oculta, na mesma camada.`, { timeout: AVISO_MS });
+  figma.notify(T('atualizada', { n: alvo.nome, h: quando }), { timeout: AVISO_MS });
   figma.ui.postMessage({ tipo: 'salvo', hora: quando });
   if (!(await ler('convite'))) await gravar('convitePendente', true);
 }
@@ -85,7 +113,12 @@ figma.ui.onmessage = async (msg) => {
   try {
     if (msg.tipo === 'comecar') {
       await gravar('boasVindas', true);
-      if (!(await abrirEditor())) figma.closePlugin('Selecione uma camada com imagem e rode o Editar no PhotoCraft de novo.');
+      if (!(await abrirEditor())) figma.closePlugin(T('selecione'));
+    } else if (msg.tipo === 'idioma') {
+      const primeiraVez = !iniciado;
+      idioma = TEXTOS[msg.idioma] ? msg.idioma : 'en';
+      if (msg.escolhido) await gravar('idioma', idioma);
+      if (primeiraVez) { iniciado = true; await iniciar(); }
     } else if (msg.tipo === 'aplicar') {
       await aplicar(msg.bytes);
     } else if (msg.tipo === 'concluir') {
@@ -105,9 +138,13 @@ figma.ui.onmessage = async (msg) => {
   }
 };
 
-(async () => {
+let iniciado = false;
+async function iniciar() {
   if (!(await ler('boasVindas'))) return mostrar('boasvindas');
   // Fechou no X depois de salvar a 1a vez: o convite aparece agora, e depois segue para o editor.
   if (await ler('convitePendente')) return mostrarConvite(selecaoOk() ? 'continuar' : 'fechar');
-  if (!(await abrirEditor())) mostrar('sobre', { aviso: 'Selecione uma camada com imagem e clique em Começar.' });
-})();
+  if (!(await abrirEditor())) mostrar('sobre', { aviso: T('selecioneComecar') });
+}
+
+// A janela responde com o idioma (escolhido antes ou o do computador) e aí o plugin começa.
+(async () => figma.ui.postMessage({ tipo: 'config', idioma: (await ler('idioma')) || null }))();
