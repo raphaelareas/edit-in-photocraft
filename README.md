@@ -23,6 +23,10 @@ The edited image goes on top, in the layer's **Fill** panel, and the original st
 the eye closed, like Figma's "Remove background". To go back, turn the original's eye on and delete
 the edited one.
 
+Your edit is flattened into a single PNG when it goes back to Figma, so the editor's layers are not kept
+in Figma. To keep them, click **Download PSD** in the plugin's top bar after saving: the layered PSD is
+saved to your computer.
+
 Shortcut: select the image and press **⌘⌥P** (Ctrl+Alt+P) to run the last plugin again.
 
 ## Install
@@ -89,6 +93,10 @@ espanhol (segue o idioma do seu computador).
 A editada entra por cima, no painel **Fill** da camada, e a original fica logo abaixo com o olho
 fechado, como no "Remover fundo" do Figma. Atalho: selecione a imagem e use **⌘⌥P** (Ctrl+Alt+P)
 para rodar o último plugin de novo.
+
+A edição vira um PNG único ao voltar para o Figma, então as camadas do editor não ficam no Figma. Para
+guardar, clique em **Baixar PSD** na barra do plugin depois de salvar: o PSD com camadas vai para o seu
+computador.
 
 **Instalar:** pela Comunidade do Figma _(link em breve)_ ou pelo GitHub: baixe o
 [zip do plugin](https://github.com/raphaelareas/edit-in-photocraft/releases/latest/download/edit-in-photocraft-plugin.zip), descompacte num lugar fixo e, no Figma desktop, use **Plugins >

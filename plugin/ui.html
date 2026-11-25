@@ -67,7 +67,9 @@
   .barra .titulo { font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 40%; }
   .barra .estado { flex: 1; color: #9a9a9a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .barra .estado.ok { color: #4cd964; }
-  .barra button { width: auto; height: 28px; padding: 0 16px; margin: 0; font-size: 12px; border-radius: 7px; }
+  .barra button { width: auto; height: 28px; padding: 0 16px; margin: 0; font-size: 12px; border-radius: 7px; flex: none; }
+  .barra .secundario-barra { background: transparent; color: #e6e6e6; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); }
+  .barra .secundario-barra:disabled { opacity: .4; cursor: default; }
   .quadro { position: relative; flex: 1; }
   .quadro iframe { position: absolute; inset: 0; border: 0; width: 100%; height: 100%; }
   .carregando { position: absolute; inset: 0; display: grid; place-items: center; color: #8c8c8c; text-align: center; line-height: 1.6; }
@@ -145,6 +147,7 @@
   <div class="barra">
     <span class="titulo" id="titulo"></span>
     <span class="estado" id="estado" data-t="estado"></span>
+    <button id="baixarPsd" class="secundario-barra" disabled data-t="baixarPsd"></button>
     <button id="concluir" data-t="concluir"></button>
   </div>
   <div class="quadro" id="quadro">
@@ -254,6 +257,7 @@ const TEXTOS = {
     dica: 'Para editar de novo, selecione a imagem e use <kbd>⌘</kbd> <kbd>⌥</kbd> <kbd>P</kbd>.<br>Enquanto edita, deixe este plugin rodando e não abra outros.',
     comecar: 'Começar', criadoPor: 'Criado por', amor: 'Feito com amor e tokens',
     estado: 'Edite e salve com ⌘S para atualizar no Figma.', concluir: 'Concluir',
+    baixarPsd: 'Baixar PSD', dicaPsd: 'Salve com ⌘S primeiro. O PSD guarda as camadas no seu computador.', psdBaixado: '✓ PSD com camadas baixado.',
     carregando: 'Abrindo o PhotoCraft…<br>Na primeira vez pode levar alguns segundos.',
     deuCerto: 'Deu certo! 🎉', convite: 'Curtiu o plugin? Me segue para ver as próximas ferramentas que eu criar.',
     fechar: 'Fechar', continuar: 'Continuar', atualizando: 'Atualizando no Figma…',
@@ -268,6 +272,7 @@ const TEXTOS = {
     dica: 'To edit again, select the image and press <kbd>⌘</kbd> <kbd>⌥</kbd> <kbd>P</kbd>.<br>While editing, keep this plugin running and don’t open others.',
     comecar: 'Get started', criadoPor: 'Made by', amor: 'Made with love and tokens',
     estado: 'Edit and save with ⌘S to update in Figma.', concluir: 'Done',
+    baixarPsd: 'Download PSD', dicaPsd: 'Save with ⌘S first. The PSD keeps your layers on your computer.', psdBaixado: '✓ Layered PSD downloaded.',
     carregando: 'Opening PhotoCraft…<br>The first time may take a few seconds.',
     deuCerto: 'It worked! 🎉', convite: 'Enjoying the plugin? Follow me to see the next tools I build.',
     fechar: 'Close', continuar: 'Continue', atualizando: 'Updating in Figma…',
@@ -282,6 +287,7 @@ const TEXTOS = {
     dica: 'Para editar de nuevo, selecciona la imagen y usa <kbd>⌘</kbd> <kbd>⌥</kbd> <kbd>P</kbd>.<br>Mientras editas, deja este plugin abierto y no abras otros.',
     comecar: 'Empezar', criadoPor: 'Creado por', amor: 'Hecho con amor y tokens',
     estado: 'Edita y guarda con ⌘S para actualizar en Figma.', concluir: 'Listo',
+    baixarPsd: 'Descargar PSD', dicaPsd: 'Guarda con ⌘S primero. El PSD conserva tus capas en tu computadora.', psdBaixado: '✓ PSD con capas descargado.',
     carregando: 'Abriendo PhotoCraft…<br>La primera vez puede tardar unos segundos.',
     deuCerto: '¡Funcionó! 🎉', convite: '¿Te gustó el plugin? Sígueme para ver las próximas herramientas que cree.',
     fechar: 'Cerrar', continuar: 'Continuar', atualizando: 'Actualizando en Figma…',
@@ -307,6 +313,7 @@ function aplicarIdioma(l) {
   for (const el of document.querySelectorAll('[data-h]')) el.innerHTML = T(el.dataset.h);
   for (const el of document.querySelectorAll('[data-alt]')) el.alt = T(el.dataset.alt);
   for (const a of document.querySelectorAll('.redes a')) a.title = a.ariaLabel = a.dataset.codigo ? T('codigo') : T('seguir', { r: a.dataset.nome });
+  $('baixarPsd').title = T('dicaPsd');
   if (tela === 'convite') $('botaoConvite').textContent = T(depois === 'continuar' ? 'continuar' : 'fechar');
 }
 
@@ -341,6 +348,8 @@ function mostrarTela(m) {
   }
   if (tela === 'editor') {
     $('titulo').textContent = m.titulo;
+    ultimoPsd = null;
+    $('baixarPsd').disabled = true;
     $('estado').className = 'estado';
     $('estado').textContent = T('estado');
     imagem = { nome: m.arquivo, bytes: m.bytes };
@@ -369,9 +378,16 @@ const tipoDe = (b) => {
   return '?';
 };
 
+// Último PSD salvo pelo editor (com as camadas), para a pessoa poder baixar.
+let ultimoPsd = null;
+
 async function recebeuSalvo(m) {
   const b = new Uint8Array(m.bytes);
   const t = tipoDe(b);
+  if (t === 'psd') {
+    ultimoPsd = { nome: /\.psd$/i.test(m.nome) ? m.nome : (m.nome || 'imagem') + '.psd', bytes: b.slice() };
+    $('baixarPsd').disabled = false;
+  }
   let final = t === 'png' || t === 'jpg' ? b : t === 'psd' ? await psdParaPng(m.bytes) : null;
   if (!final) {
     $('estado').className = 'estado';
@@ -385,6 +401,16 @@ async function recebeuSalvo(m) {
 
 $('principal').onclick = () => figmaMsg({ tipo: 'comecar' });
 $('concluir').onclick = () => figmaMsg({ tipo: 'concluir' });
+$('baixarPsd').onclick = () => {
+  if (!ultimoPsd) return;
+  const url = URL.createObjectURL(new Blob([ultimoPsd.bytes], { type: 'image/vnd.adobe.photoshop' }));
+  const a = document.createElement('a');
+  a.href = url; a.download = ultimoPsd.nome;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10000);
+  $('estado').className = 'estado ok';
+  $('estado').textContent = T('psdBaixado');
+};
 $('idioma').onchange = () => { aplicarIdioma($('idioma').value); figmaMsg({ tipo: 'idioma', idioma, escolhido: true }); };
 $('botaoConvite').onclick = () => figmaMsg({ tipo: depois });
 
