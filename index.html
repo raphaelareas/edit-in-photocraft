@@ -115,30 +115,15 @@
     box-shadow: 0 0 40px var(--cor), inset 0 0 0 1px rgba(255, 255, 255, .15); }
   .placa .borda:nth-of-type(3) { transform: translateZ(-18px); }
   .placa .num { position: absolute; right: 26px; bottom: 22px; font: 700 34px/1 "Inter Tight", sans-serif; color: rgba(255, 255, 255, .07); }
-  /* Ícones "em pé" sobre cada placa, sempre de frente para quem olha (os logos não são distorcidos) */
-  .em-pe { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d;
-    transform: translateZ(2px) rotateZ(45deg) rotateX(-57deg); }
-  .app { position: absolute; left: -46px; bottom: 6px; width: 92px; height: 92px; border-radius: 22px; overflow: hidden;
-    display: grid; place-items: center; transition: transform .9s var(--ease);
-    box-shadow: 0 24px 40px -14px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .14), 0 0 40px -6px var(--cor);
-    animation: flutuar 5s ease-in-out infinite; }
-  .p2 .app { animation-delay: -1.6s; } .p3 .app { animation-delay: -3.2s; }
-  @keyframes flutuar { 50% { translate: 0 -6px; } }
-  .app::after { content: ''; position: absolute; inset: 0; border-radius: inherit;
-    background: linear-gradient(160deg, rgba(255, 255, 255, .28), transparent 42%); pointer-events: none; }
-  /* Nas camadas de baixo o ícone fica na ponta da frente, para não sumir atrás da camada de cima */
-  .p2 .em-pe, .p3 .em-pe { left: 30%; top: 70%; opacity: 0; transition: opacity .4s; }
-  .p2 .app, .p3 .app { scale: .72; transform-origin: 50% 100%; }
-  .palco.aberto .p2 .em-pe, .palco.aberto .p3 .em-pe { opacity: 1; transition: opacity .5s .35s; }
-  .app-figma { background: #fff; }
-  .app-figma svg { width: 34px; height: 51px; }
-  .app-pc img { width: 100%; height: 100%; display: block; }
-  .app-tecla { background: linear-gradient(180deg, #2a2b3f, #15151f); }
-  .tecla { font: 700 24px/1 "Inter Tight", Inter, sans-serif; color: #fff; letter-spacing: -.02em; }
-  .sombra { position: absolute; left: 50%; top: 50%; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%;
-    background: radial-gradient(closest-side, rgba(0, 0, 0, .55), transparent); }
+  /* Cada placa é o próprio ícone: Figma, PhotoCraft e Figma de novo (selecionou, editou, voltou) */
+  .face-figma svg { position: relative; width: 112px; height: 168px;
+    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .45)); }
+  .face-pc { background: #2f7bf5 !important; }
+  .face-pc img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .face-pc::before { z-index: 1; }
+  .face-pc .num { z-index: 2; color: rgba(255, 255, 255, .25); }
   .p1 { --i: 2; --cor: #5b8cff; }
-  .p2 { --i: 1; --cor: #8f6bff; }
+  .p2 { --i: 1; --cor: #4f8dff; }
   .p3 { --i: 0; --cor: #c77dff; }
 
   .palco.aberto .placa { transform: translateZ(calc(var(--i) * 172px - 120px)); }
@@ -159,7 +144,7 @@
   .cartao p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--texto-2); }
   .cartao::after { content: ''; position: absolute; top: 50%; width: 56px; border-top: 1px dashed color-mix(in srgb, var(--cor) 70%, transparent); }
   .c1 { --cor: #5b8cff; right: 0; top: 40px; }
-  .c2 { --cor: #8f6bff; left: 0; top: 250px; }
+  .c2 { --cor: #4f8dff; left: -40px; top: 420px; width: 250px; }
   .c3 { --cor: #c77dff; right: 0; top: 450px; }
   .c1::after, .c3::after { right: 100%; }
   .c2::after { left: 100%; }
@@ -270,14 +255,11 @@
       <div class="cena" aria-hidden="true">
         <div class="pilha">
           <div class="placa p3"><i class="borda"></i><i class="borda"></i><i class="borda"></i>
-            <div class="face"><span class="num">03</span><span class="sombra"></span></div>
-            <div class="em-pe"><div class="app app-tecla"><span class="tecla" id="tecla3d">⌘S</span></div></div></div>
+            <div class="face face-figma"><span class="num">03</span><svg viewBox="0 0 38 57" aria-hidden="true"><path fill="#1abcfe" d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z"/><path fill="#0acf83" d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z"/><path fill="#ff7262" d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z"/><path fill="#f24e1e" d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z"/><path fill="#a259ff" d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z"/></svg></div></div>
           <div class="placa p2"><i class="borda"></i><i class="borda"></i><i class="borda"></i>
-            <div class="face"><span class="num">02</span><span class="sombra"></span></div>
-            <div class="em-pe"><div class="app app-pc"><img src="site/photocraft-icon.png" alt=""></div></div></div>
+            <div class="face face-pc"><img src="site/photocraft-icon.png" alt=""><span class="num">02</span></div></div>
           <div class="placa p1"><i class="borda"></i><i class="borda"></i><i class="borda"></i>
-            <div class="face"><span class="num">01</span><span class="sombra"></span></div>
-            <div class="em-pe"><div class="app app-figma"><svg viewBox="0 0 38 57" aria-hidden="true"><path fill="#1abcfe" d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z"/><path fill="#0acf83" d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z"/><path fill="#ff7262" d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z"/><path fill="#f24e1e" d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z"/><path fill="#a259ff" d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z"/></svg></div></div></div>
+            <div class="face face-figma"><span class="num">01</span><svg viewBox="0 0 38 57" aria-hidden="true"><path fill="#1abcfe" d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z"/><path fill="#0acf83" d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z"/><path fill="#ff7262" d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z"/><path fill="#f24e1e" d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z"/><path fill="#a259ff" d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z"/></svg></div></div>
         </div>
       </div>
 
@@ -355,7 +337,7 @@ function aplicar(l) {
   document.getElementById('idioma').value = idioma;
   for (const el of document.querySelectorAll('[data-t]')) el.textContent = teclas(t[el.dataset.t]);
   for (const a of document.querySelectorAll('.rede')) a.title = a.ariaLabel = t.seguir + ' ' + a.dataset.titulo;
-  document.getElementById('atalho').textContent = document.getElementById('tecla3d').textContent = WINDOWS ? 'Ctrl+S' : '⌘S';
+  document.getElementById('atalho').textContent = WINDOWS ? 'Ctrl+S' : '⌘S';
   mostrarGithub();
 }
 
