@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editar no PhotoCraft: ponte</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #262626; overflow: hidden; }
+  iframe { border: 0; width: 100%; height: 100%; display: block; }
+</style>
+</head>
+<body>
+<!--
+  Ponte entre o plugin do Figma e o PhotoCraft web.
+  O editor (pasta editor/) é a versão web oficial do PhotoCraft, sem nenhuma modificação.
+  Esta página, do mesmo site, abre o editor e conversa com ele "por fora":
+   - recebe do plugin {ponte:'photocraft', tipo:'abrir', nome, mime, bytes} e solta o arquivo
+     na tela do editor, como se a pessoa tivesse arrastado do Finder;
+   - quando o editor salva (ele gera um download), entrega o arquivo ao plugin como
+     {ponte:'photocraft', tipo:'salvo', nome, mime, bytes} em vez de baixar;
+   - avisa {tipo:'pronto'} quando o editor terminou de carregar.
+-->
+<iframe id="editor" src="editor/" title="PhotoCraft" allow="fullscreen; clipboard-read; clipboard-write"></iframe>
+<script>
+(() => {
+  const pai = window.parent !== window ? window.parent : null;
+  const editor = document.getElementById('editor');
+  const enviar = (m, transferir) => pai && pai.postMessage(Object.assign({ ponte: 'photocraft' }, m), '*', transferir || []);
+  let avisouPronto = false;
+
+  // Liga a ponte na janela do editor (mesmo site, então podemos acessá-la).
+  function ligar() {
+    const w = editor.contentWindow;
+    if (!w || w.__ponte) return;
+    w.__ponte = true;
+    // Guarda o arquivo de cada link criado, porque o editor apaga o link logo depois do clique.
+    const arquivos = new Map();
+    const criarLink = w.URL.createObjectURL.bind(w.URL);
+    w.URL.createObjectURL = (obj) => {
+      const url = criarLink(obj);
+      if (obj instanceof w.Blob) arquivos.set(url, obj);
+      return url;
+    };
+    const cliqueOriginal = w.HTMLAnchorElement.prototype.click;
+    w.HTMLAnchorElement.prototype.click = function () {
+      const arquivo = pai && this.download && arquivos.get(this.href);
+      if (!arquivo) return cliqueOriginal.call(this);
+      const nome = this.download;
+      arquivo.arrayBuffer().then((bytes) => enviar({ tipo: 'salvo', nome, mime: arquivo.type, bytes }, [bytes]));
+    };
+  }
+
+  // O editor apaga o aviso "Loading PhotoCraft…" quando começa a rodar.
+  const espera = setInterval(() => {
+    let d;
+    try { d = editor.contentDocument; } catch (e) { return; }
+    if (!d || d.readyState === 'loading' || !d.getElementById('photocraft_canvas')) return;
+    ligar();
+    if (d.getElementById('photocraft_loading') || avisouPronto) return;
+    avisouPronto = true;
+    clearInterval(espera);
+    enviar({ tipo: 'pronto' });
+  }, 150);
+
+  window.addEventListener('message', (ev) => {
+    const m = ev.data;
+    if (!pai || ev.source !== pai || !m || m.ponte !== 'photocraft' || m.tipo !== 'abrir') return;
+    const w = editor.contentWindow;
+    const tela = editor.contentDocument.getElementById('photocraft_canvas');
+    const dt = new w.DataTransfer();
+    dt.items.add(new w.File([m.bytes], m.nome, { type: m.mime || '' }));
+    const pos = { clientX: w.innerWidth / 2, clientY: w.innerHeight / 2 };
+    for (const tipo of ['dragenter', 'dragover', 'drop']) {
+      tela.dispatchEvent(new w.DragEvent(tipo, Object.assign({ dataTransfer: dt, bubbles: true, cancelable: true }, pos)));
+    }
+    enviar({ tipo: 'aberto', nome: m.nome });
+  });
+})();
+</script>
+</body>
+</html>
