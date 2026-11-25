@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Edit in PhotoCraft · a free plugin for Figma</title>
-<meta name="description" content="Free Figma plugin: select an image, edit it in PhotoCraft without leaving Figma and save with ⌘S. Your original is kept.">
+<meta name="description" content="Free plugin for Figma: select an image, edit it in PhotoCraft without leaving Figma and save with ⌘S. Your original is kept.">
 <meta property="og:title" content="Edit in PhotoCraft · a free plugin for Figma">
-<meta property="og:description" content="Free Figma plugin: edit images in PhotoCraft without leaving Figma. Save with ⌘S, your original is kept.">
+<meta property="og:description" content="Free plugin for Figma: edit images in PhotoCraft without leaving Figma. Save with ⌘S, your original is kept.">
 <meta property="og:url" content="https://raphaelareas.github.io/edit-in-photocraft/">
 <meta property="og:type" content="website">
 <meta name="theme-color" content="#07070d">
@@ -22,6 +22,8 @@
     --linha: rgba(255, 255, 255, .08); --vidro: rgba(255, 255, 255, .04);
     --grad: linear-gradient(100deg, #5b8cff 0%, #8f6bff 50%, #c77dff 100%);
     --ease: cubic-bezier(.2, .8, .2, 1);
+    --escala: .7;      /* tamanho da pilha (o JavaScript ajusta à altura da tela) */
+    --passo: 330px;    /* distância entre as placas abertas, em px da tela (o JavaScript calcula) */
   }
   * { box-sizing: border-box; }
   html { background: var(--fundo); }
@@ -33,21 +35,21 @@
   .fundo { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
   .fundo::before { content: ''; position: absolute; inset: -20%;
     background:
-      radial-gradient(40% 35% at 72% 42%, rgba(91, 108, 255, .22), transparent 70%),
-      radial-gradient(30% 30% at 88% 70%, rgba(155, 92, 255, .18), transparent 70%),
-      radial-gradient(35% 30% at 12% 10%, rgba(79, 124, 255, .10), transparent 70%); }
+      radial-gradient(40% 30% at 50% 62%, rgba(91, 108, 255, .20), transparent 70%),
+      radial-gradient(28% 26% at 78% 75%, rgba(155, 92, 255, .16), transparent 70%),
+      radial-gradient(30% 26% at 20% 20%, rgba(79, 124, 255, .09), transparent 70%); }
   .fundo::after { content: ''; position: absolute; inset: 0;
     background-image: linear-gradient(var(--linha) 1px, transparent 1px), linear-gradient(90deg, var(--linha) 1px, transparent 1px);
-    background-size: 56px 56px; opacity: .35;
-    -webkit-mask: radial-gradient(70% 60% at 60% 40%, #000, transparent 75%); mask: radial-gradient(70% 60% at 60% 40%, #000, transparent 75%); }
+    background-size: 56px 56px; opacity: .3;
+    -webkit-mask: radial-gradient(60% 55% at 50% 60%, #000, transparent 75%); mask: radial-gradient(60% 55% at 50% 60%, #000, transparent 75%); }
 
   .pagina { position: relative; z-index: 1; max-width: 1240px; margin: 0 auto; padding: 0 32px;
     min-height: 100vh; min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
 
   /* Menu */
-  .nav { display: flex; align-items: center; justify-content: space-between; height: 84px; }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 80px; }
   .logo { width: 42px; height: 42px; border-radius: 50%; background: #fff; display: grid; place-items: center;
-    transition: transform .35s var(--ease); box-shadow: 0 0 0 1px var(--linha); }
+    transition: transform .35s var(--ease); box-shadow: 0 0 0 1px var(--linha); flex: none; }
   .logo:hover { transform: rotate(-8deg) scale(1.04); }
   .logo span { width: 100%; height: 100%; background: #0b0b10;
     -webkit-mask: url(site/logo-ra.png) 50% / contain no-repeat; mask: url(site/logo-ra.png) 50% / contain no-repeat; }
@@ -59,132 +61,136 @@
     border: 1px solid var(--linha); background: var(--vidro); transition: color .2s, border-color .2s, transform .2s; }
   .rede:hover { color: var(--texto); border-color: rgba(255, 255, 255, .22); transform: translateY(-1px); }
   .rede svg { width: 17px; height: 17px; }
-  .btn-portfolio { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 18px; border-radius: 999px;
+  .btn-portfolio { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 18px; border-radius: 999px; white-space: nowrap;
     background: #fff; color: #0b0b10; font: 600 14px Inter, system-ui, sans-serif; transition: transform .2s, box-shadow .2s; }
   .btn-portfolio:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(143, 107, 255, .35); }
+  .curto { display: none; }
 
-  /* Hero */
-  .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 32px; align-items: center; padding: 0; }
-  .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 22px; color: var(--texto-2);
+  /* Hero, tudo centralizado */
+  .hero { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 8px 0 12px; min-height: 0; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 10px; margin: 0 0 14px; color: var(--texto-2);
     font: 600 12px/1 Inter, system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase; }
   .eyebrow i { width: 8px; height: 8px; border-radius: 50%; background: var(--grad); box-shadow: 0 0 0 4px rgba(143, 107, 255, .18), 0 0 14px rgba(143, 107, 255, .8); }
-  h1 { font: 600 clamp(40px, 5.2vw, 68px)/1.04 "Inter Tight", Inter, system-ui, sans-serif; letter-spacing: -.035em; margin: 0 0 22px; }
+  h1 { font: 600 clamp(36px, 3.9vw, 56px)/1.05 "Inter Tight", Inter, system-ui, sans-serif; letter-spacing: -.035em; margin: 0 0 16px; max-width: 880px; }
+  h1 { margin-bottom: 14px; }
   h1 em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .sub { color: var(--texto-2); font-size: 18px; max-width: 520px; margin: 0 0 34px; }
-  .acoes { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 40px; }
-  .btn { position: relative; display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 22px; border-radius: 999px; white-space: nowrap;
-    font: 600 15px Inter, system-ui, sans-serif; border: 0; cursor: pointer; transition: transform .2s var(--ease), box-shadow .2s, background .2s; }
+  .sub { color: var(--texto-2); font-size: 17px; max-width: 640px; margin: 0 0 22px; }
+  .acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-bottom: 8px; }
+  .btn { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 10px; height: 50px; padding: 0 22px;
+    border-radius: 999px; white-space: nowrap; font: 600 15px Inter, system-ui, sans-serif; border: 0; cursor: pointer;
+    transition: transform .2s var(--ease), box-shadow .2s, background .2s; }
   .btn svg { width: 18px; height: 18px; flex: none; }
   .btn-figma { background: var(--grad); color: #fff; opacity: .5; cursor: not-allowed; }
   .selo { position: absolute; top: -10px; right: -8px; padding: 4px 9px; border-radius: 999px; background: #fff; color: #3b2a8c;
-    font: 700 10.5px/1 Inter, system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, .35); }
+    font: 700 10.5px/1 Inter, system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; box-shadow: 0 4px 14px rgba(0, 0, 0, .35); }
   .btn-figma-caixa { position: relative; display: inline-flex; }
   .btn-github { background: var(--vidro); color: var(--texto); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); }
   .btn-github:hover { background: rgba(255, 255, 255, .08); transform: translateY(-1px); }
 
-  .numeros { display: flex; flex-wrap: nowrap; row-gap: 14px; white-space: nowrap; }
-  .numero { display: flex; align-items: center; gap: 12px; padding-right: 20px; margin-right: 20px; border-right: 1px solid var(--linha); }
-  .numero:last-child { border-right: 0; margin-right: 0; padding-right: 0; }
-  .numero svg { width: 22px; height: 22px; color: var(--texto-2); flex: none; }
-  .numero b { display: block; font: 600 16px/1.2 "Inter Tight", Inter, sans-serif; }
-  .numero span { display: block; font-size: 12.5px; color: var(--texto-3); }
+  .numeros { display: flex; justify-content: center; text-align: left; white-space: nowrap; order: 2; margin-top: 4px; }
+  .numero { display: flex; align-items: center; gap: 10px; padding: 0 20px; border-right: 1px solid var(--linha); }
+  .numero:last-child { border-right: 0; }
+  .numero svg { width: 20px; height: 20px; color: var(--texto-2); flex: none; }
+  .numero b { display: block; font: 600 15px/1.2 "Inter Tight", Inter, sans-serif; }
+  .numero span { display: block; font-size: 12px; color: var(--texto-3); }
 
-  /* Palco 3D */
-  .palco { position: relative; height: 600px; display: grid; place-items: center; outline: none; }
-  .orbita { position: absolute; left: 50%; top: 50%; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .06);
-    transform: translate(-50%, -50%) rotateX(68deg); }
-  .orbita.o1 { width: 560px; height: 560px; }
-  .orbita.o2 { width: 400px; height: 400px; border-color: rgba(143, 107, 255, .14); }
-  .ponto { position: absolute; width: 7px; height: 7px; border-radius: 50%; background: #a98bff; box-shadow: 0 0 12px #8f6bff;
-    animation: piscar 3.2s ease-in-out infinite; }
+  /* Palco: a pilha fica no centro e, com o mouse, as placas se abrem para os lados */
+  .palco { position: relative; flex: 1; width: 100%; min-height: 250px; outline: none; order: 1; }
+  .orbita { position: absolute; left: 50%; top: calc(50% - 50px); border-radius: 50%; border: 1px solid rgba(255, 255, 255, .06);
+    transform: translate(-50%, -50%) rotateX(70deg); pointer-events: none; }
+  .orbita.o1 { width: 760px; height: 760px; }
+  .orbita.o2 { width: 480px; height: 480px; border-color: rgba(143, 107, 255, .14); }
+  .ponto { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #a98bff; box-shadow: 0 0 12px #8f6bff;
+    animation: piscar 3.2s ease-in-out infinite; pointer-events: none; }
   @keyframes piscar { 50% { opacity: .35; } }
 
-  .cena { perspective: 1600px; width: 300px; height: 300px; scale: .8; }
-  .pilha { position: relative; width: 300px; height: 300px; transform-style: preserve-3d;
-    transform: rotateX(57deg) rotateZ(-45deg); transition: transform .9s var(--ease); }
+  .cena { position: absolute; left: 50%; top: calc(50% - 50px); width: 300px; height: 300px; margin: -150px 0 0 -150px;
+    perspective: 4200px; scale: var(--escala); transition: top .8s var(--ease); }
+  .pilha { position: relative; width: 300px; height: 300px; transform-style: preserve-3d; transform: rotateX(57deg) rotateZ(-45deg); }
   .placa { position: absolute; inset: 0; border-radius: 34px; transform-style: preserve-3d;
-    transform: translateZ(calc(var(--i) * 26px)); transition: transform .9s var(--ease); }
+    transform: translate3d(0, 0, calc(var(--i) * 26px)); transition: transform .9s var(--ease); }
+  /* Aberta: cada placa anda na diagonal da pilha, que na tela vira um movimento só para o lado */
+  .palco.aberto .placa { transform: translate3d(calc(var(--lado) * var(--d)), calc(var(--lado) * var(--d)), 0); }
   .placa .face { position: absolute; inset: 0; border-radius: 34px; display: grid; place-items: center;
     background: linear-gradient(135deg, rgba(40, 42, 70, .96), rgba(18, 18, 32, .96));
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12), inset 0 1px 0 rgba(255, 255, 255, .2); overflow: hidden; }
   .placa .face::before { content: ''; position: absolute; inset: 0; background: radial-gradient(60% 60% at 30% 25%, rgba(255, 255, 255, .10), transparent 70%); }
-  /* Espessura: cópias da placa logo abaixo, com um filete de cor no meio */
-  .placa .borda { position: absolute; inset: 0; border-radius: 34px; background: #0c0c16;
-    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06); }
+  .placa .borda { position: absolute; inset: 0; border-radius: 34px; background: #0c0c16; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06); }
   .placa .borda:nth-of-type(1) { transform: translateZ(-6px); }
   .placa .borda:nth-of-type(2) { transform: translateZ(-12px); background: var(--cor); opacity: .9;
     box-shadow: 0 0 40px var(--cor), inset 0 0 0 1px rgba(255, 255, 255, .15); }
   .placa .borda:nth-of-type(3) { transform: translateZ(-18px); }
   .placa .num { position: absolute; right: 26px; bottom: 22px; font: 700 34px/1 "Inter Tight", sans-serif; color: rgba(255, 255, 255, .07); }
-  /* Cada placa é o próprio ícone: Figma, PhotoCraft e Figma de novo (selecionou, editou, voltou) */
-  .face-figma svg { position: relative; width: 112px; height: 168px;
-    filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .45)); }
+  .face-figma svg { position: relative; width: 112px; height: 168px; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .45)); }
   .face-pc { background: #2f7bf5 !important; }
   .face-pc img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .face-pc::before { z-index: 1; }
   .face-pc .num { z-index: 2; color: rgba(255, 255, 255, .25); }
-  .p1 { --i: 2; --cor: #5b8cff; }
-  .p2 { --i: 1; --cor: #4f8dff; }
-  .p3 { --i: 0; --cor: #c77dff; }
+  .p1 { --i: 2; --lado: -1; --cor: #5b8cff; }
+  .p2 { --i: 1; --lado: 0; --cor: #4f8dff; }
+  .p3 { --i: 0; --lado: 1; --cor: #c77dff; }
 
-  .palco.aberto .placa { transform: translateZ(calc(var(--i) * 166px - 140px)); }
-
-  /* Cartões que explicam cada camada */
-  .cartao { position: absolute; width: 250px; padding: 14px 16px 15px; border-radius: 16px;
+  /* Cartões: um embaixo de cada placa aberta, todos da mesma altura */
+  .cartoes { position: absolute; left: 50%; bottom: 6px; translate: -50% 0; display: grid;
+    grid-template-columns: repeat(3, calc(var(--passo) - 24px)); gap: 24px; pointer-events: none; }
+  .cartao { position: relative; padding: 14px 16px 15px; border-radius: 16px; text-align: left;
     background: rgba(18, 18, 30, .82); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1), 0 20px 50px rgba(0, 0, 0, .45);
-    opacity: 0; transform: translateY(10px); transition: opacity .5s var(--ease), transform .6s var(--ease); pointer-events: none; }
+    opacity: 0; transform: translateY(12px); transition: opacity .5s var(--ease), transform .6s var(--ease); }
   .palco.aberto .cartao { opacity: 1; transform: none; }
   .palco.aberto .c2 { transition-delay: .08s; }
   .palco.aberto .c3 { transition-delay: .16s; }
+  .cartao::after { content: ''; position: absolute; left: 50%; bottom: 100%; height: 22px; border-left: 1px dashed color-mix(in srgb, var(--cor) 70%, transparent); }
   .cartao .topo { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
   .cartao .n { font: 700 11px/1 Inter, sans-serif; color: var(--texto-3); }
   .cartao b { font: 600 14.5px/1.3 "Inter Tight", Inter, sans-serif; }
-  .cartao .chip { margin-left: auto; padding: 3px 8px; border-radius: 999px; font: 600 10.5px/1.4 Inter, sans-serif;
+  .cartao .chip { margin-left: auto; padding: 3px 8px; border-radius: 999px; font: 600 10.5px/1.4 Inter, sans-serif; white-space: nowrap;
     color: #fff; background: color-mix(in srgb, var(--cor) 35%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cor) 60%, transparent); }
   .cartao p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--texto-2); }
-  .cartao::after { content: ''; position: absolute; top: 50%; width: 30px; border-top: 1px dashed color-mix(in srgb, var(--cor) 70%, transparent); }
-  .c1 { --cor: #5b8cff; right: -40px; top: 124px; width: 230px; }
-  .c2 { --cor: #4f8dff; left: -60px; top: 245px; width: 215px; }
-  .c3 { --cor: #c77dff; right: -40px; top: 352px; width: 230px; }
-  .c1::after, .c3::after { right: 100%; }
-  .c2::after { left: 100%; }
-  .dica { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px;
-    margin: 0; color: var(--texto-3); font-size: 12.5px; transition: opacity .3s; white-space: nowrap; }
+  .c1 { --cor: #5b8cff; } .c2 { --cor: #4f8dff; } .c3 { --cor: #c77dff; }
+  .dica { position: absolute; left: 50%; bottom: 34px; translate: -50% 0; display: flex; align-items: center; gap: 8px; margin: 0;
+    color: var(--texto-3); font-size: 12.5px; transition: opacity .3s; white-space: nowrap; pointer-events: none; }
   .dica svg { width: 14px; height: 14px; color: #a98bff; }
   .palco.aberto .dica { opacity: 0; }
 
   /* Rodapé */
-  .rodape { padding: 8px 0 22px; color: var(--texto-3); font-size: 12.5px; }
-  .aviso-marcas { margin: 0 0 14px; font-size: 11.5px; line-height: 1.55; color: var(--texto-3); max-width: 1000px; }
+  .rodape { padding: 4px 0 18px; color: var(--texto-3); font-size: 12.5px; }
+  .aviso-marcas { margin: 0 0 12px; font-size: 11.5px; line-height: 1.55; color: var(--texto-3); }
   .linha-rodape { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: space-between; align-items: center;
-    padding-top: 14px; border-top: 1px solid var(--linha); }
+    padding-top: 12px; border-top: 1px solid var(--linha); }
   .rodape a { color: var(--texto-2); }
   .rodape a:hover { color: var(--texto); }
   .amor { display: flex; align-items: center; gap: 8px; }
   .links-rodape { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+
+  /* Tablet e celular: pilha aberta na vertical e cartões em lista */
   @media (max-width: 980px) {
-    .hero { grid-template-columns: 1fr; min-height: 0; padding-top: 16px; }
-    .palco { height: auto; padding: 30px 0 20px; display: flex; flex-direction: column; align-items: center; }
-    .cena { transform: scale(.82); margin: 10px 0 -10px; scale: 1; }
+    .hero { padding-top: 12px; }
+    .numeros { order: 0; margin: 14px 0 0; }
+    .palco { order: 1; }
+    .palco { flex: none; display: flex; flex-direction: column; align-items: center; padding: 20px 0 8px; min-height: 0; }
     .orbita, .ponto, .dica { display: none; }
-    .cartao { position: relative; inset: auto; width: 100%; max-width: 460px; opacity: 1; transform: none; margin-top: 12px; }
+    .cena { position: relative; left: auto; top: auto; margin: 150px 0 120px; scale: .68; }
+    .palco .placa, .palco.aberto .placa { transform: translate3d(0, 0, calc(var(--i) * 205px - 160px)); }
+    .cartoes { position: relative; left: auto; bottom: auto; translate: none; width: 100%; max-width: 480px;
+      grid-template-columns: 1fr; grid-auto-rows: 1fr; gap: 12px; }
+    .cartao { opacity: 1; transform: none; }
     .cartao::after { display: none; }
-    .palco.aberto .placa, .palco .placa { transform: translateZ(calc(var(--i) * 205px - 160px)); }
-    .cena { margin-top: 110px !important; margin-bottom: 80px !important; }
+    .rodape { text-align: center; }
+    .linha-rodape, .amor, .links-rodape { justify-content: center; }
   }
   @media (max-width: 600px) {
     .pagina { padding: 0 16px; }
     .nav { height: 72px; }
-    .btn-portfolio .texto-longo { display: none; }
+    .longo { display: none; } .curto { display: inline; }
     .idioma { padding: 7px 10px; }
     .rede { display: none; }
-    .sub { font-size: 16.5px; }
-    .acoes .btn, .btn-figma-caixa { width: 100%; justify-content: center; }
-    .numero { padding-right: 14px; margin-right: 14px; }
-    .numeros { flex-wrap: wrap; white-space: normal; }
-    .cena { transform: scale(.68); margin: -20px 0 -40px; }
+    .sub { font-size: 16px; }
+    .acoes { width: 100%; }
+    .acoes .btn, .btn-figma-caixa { width: 100%; }
+    .numeros { flex-wrap: wrap; justify-content: center; row-gap: 12px; }
+    .numero { padding: 0 12px; }
+    .cena { scale: .62; margin: 130px 0 100px; }
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition: none !important; animation: none !important; }
@@ -202,59 +208,57 @@
         <option value="en">EN</option><option value="pt">PT</option><option value="es">ES</option>
       </select>
       <a class="rede" href="https://www.linkedin.com/in/raphaelareas/" target="_blank" rel="noopener" data-titulo="LinkedIn">
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.850 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0z"/></svg>
       </a>
       <a class="rede" href="https://www.instagram.com/rapha.ux" target="_blank" rel="noopener" data-titulo="Instagram">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1" fill="currentColor" stroke="none"/></svg>
       </a>
       <a class="btn-portfolio" href="https://raphaelareas.com/" target="_blank" rel="noopener">
-        <span><span data-t="portfolio"></span><span class="texto-longo" data-t="portfolio2"></span></span>
+        <span class="longo" data-t="portfolio"></span><span class="curto" data-t="portfolioCurto"></span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
       </a>
     </div>
   </header>
 
   <main class="hero">
-    <section>
-      <p class="eyebrow"><i></i><span data-t="eyebrow"></span></p>
-      <h1><span data-t="titulo1"></span> <em data-t="titulo2"></em></h1>
-      <p class="sub" data-t="sub"></p>
-      <div class="acoes">
-        <span class="btn-figma-caixa">
-          <button class="btn btn-figma" type="button" disabled aria-disabled="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>
-            <span data-t="figma"></span>
-          </button>
-          <span class="selo" data-t="embreve"></span>
-        </span>
-        <a class="btn btn-github" href="https://github.com/raphaelareas/edit-in-photocraft/releases/latest/download/edit-in-photocraft-plugin.zip">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.7 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.1.9 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
-          <span data-t="github"></span>
-        </a>
+    <p class="eyebrow"><i></i><span data-t="eyebrow"></span></p>
+    <h1><span data-t="titulo1"></span> <em data-t="titulo2"></em></h1>
+    <p class="sub" data-t="sub"></p>
+    <div class="acoes">
+      <span class="btn-figma-caixa">
+        <button class="btn btn-figma" type="button" disabled aria-disabled="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>
+          <span data-t="figma"></span>
+        </button>
+        <span class="selo" data-t="embreve"></span>
+      </span>
+      <a class="btn btn-github" href="https://github.com/raphaelareas/edit-in-photocraft/releases/latest/download/edit-in-photocraft-plugin.zip">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.2c-3.3.7-4-1.4-4-1.4-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6 0-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.7 1.6.2 2.8.1 3.2.8.8 1.3 1.9 1.3 3.1 0 4.6-2.8 5.6-5.5 5.9.5.4.9 1.1.9 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
+        <span data-t="github"></span>
+      </a>
+    </div>
+    <div class="numeros">
+      <div class="numero">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>
+        <div><b id="estrelas">—</b><span data-t="estrelas"></span></div>
       </div>
-      <div class="numeros">
-        <div class="numero">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/></svg>
-          <div><b id="estrelas">—</b><span data-t="estrelas"></span></div>
-        </div>
-        <div class="numero">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>
-          <div><b id="downloads">—</b><span data-t="downloads"></span></div>
-        </div>
-        <div class="numero">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v4h-4"/></svg>
-          <div><b id="versao">v1.0.0</b><span id="atualizado" data-t="gratis"></span></div>
-        </div>
+      <div class="numero">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>
+        <div><b id="downloads">—</b><span data-t="downloads"></span></div>
       </div>
-    </section>
+      <div class="numero">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v4h-4"/></svg>
+        <div><b id="versao">v1.0.1</b><span id="atualizado" data-t="gratis"></span></div>
+      </div>
+    </div>
 
     <section class="palco" id="palco" tabindex="0" aria-label="How it works">
       <div class="orbita o1" aria-hidden="true"></div>
       <div class="orbita o2" aria-hidden="true"></div>
-      <span class="ponto" style="left: 14%; top: 30%" aria-hidden="true"></span>
-      <span class="ponto" style="left: 84%; top: 24%; animation-delay: .8s" aria-hidden="true"></span>
-      <span class="ponto" style="left: 90%; top: 62%; animation-delay: 1.6s" aria-hidden="true"></span>
-      <span class="ponto" style="left: 22%; top: 76%; animation-delay: 2.2s" aria-hidden="true"></span>
+      <span class="ponto" style="left: 16%; top: 30%" aria-hidden="true"></span>
+      <span class="ponto" style="left: 82%; top: 22%; animation-delay: .8s" aria-hidden="true"></span>
+      <span class="ponto" style="left: 88%; top: 58%; animation-delay: 1.6s" aria-hidden="true"></span>
+      <span class="ponto" style="left: 10%; top: 62%; animation-delay: 2.2s" aria-hidden="true"></span>
 
       <div class="cena" aria-hidden="true">
         <div class="pilha">
@@ -267,9 +271,11 @@
         </div>
       </div>
 
-      <div class="cartao c1"><div class="topo"><span class="n">01</span><b data-t="c1t"></b><span class="chip">Figma</span></div><p data-t="c1"></p></div>
-      <div class="cartao c2"><div class="topo"><span class="n">02</span><b data-t="c2t"></b><span class="chip">PhotoCraft</span></div><p data-t="c2"></p></div>
-      <div class="cartao c3"><div class="topo"><span class="n">03</span><b data-t="c3t"></b><span class="chip" id="atalho">⌘S</span></div><p data-t="c3"></p></div>
+      <div class="cartoes">
+        <div class="cartao c1"><div class="topo"><span class="n">01</span><b data-t="c1t"></b><span class="chip">Figma</span></div><p data-t="c1"></p></div>
+        <div class="cartao c2"><div class="topo"><span class="n">02</span><b data-t="c2t"></b><span class="chip">PhotoCraft</span></div><p data-t="c2"></p></div>
+        <div class="cartao c3"><div class="topo"><span class="n">03</span><b data-t="c3t"></b><span class="chip" id="atalho">⌘S</span></div><p data-t="c3"></p></div>
+      </div>
       <p class="dica"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 4 7 16 2.5-6.5L20 11z"/></svg><span data-t="dica"></span></p>
     </section>
   </main>
@@ -294,7 +300,7 @@
 <script>
 const TEXTOS = {
   en: {
-    portfolio: 'View', portfolio2: ' my portfolio', eyebrow: 'Free plugin for Figma · Open source',
+    portfolio: 'View my portfolio', portfolioCurto: 'View portfolio', eyebrow: 'Free plugin for Figma',
     titulo1: 'Edit images in PhotoCraft', titulo2: 'without leaving Figma.',
     sub: 'Select an image, open it in a full editor with layers, masks and filters, and hit ⌘S. It updates in Figma, and your original stays safe in the same layer.',
     figma: 'Figma Community', licenca: 'MIT License', privacidade: 'Privacy', embreve: 'Coming soon', github: 'Install from GitHub',
@@ -308,7 +314,7 @@ const TEXTOS = {
     seguir: 'Follow on',
   },
   pt: {
-    portfolio: 'Ver', portfolio2: ' meu portfólio', eyebrow: 'Plugin gratuito para o Figma · Código aberto',
+    portfolio: 'Ver meu portfólio', portfolioCurto: 'Ver portfólio', eyebrow: 'Plugin gratuito para o Figma',
     titulo1: 'Edite imagens no PhotoCraft', titulo2: 'sem sair do Figma.',
     sub: 'Selecione uma imagem, abra num editor completo, com camadas, máscaras e filtros, e aperte ⌘S. Ela atualiza no Figma, e a original fica guardada na mesma camada.',
     figma: 'Comunidade do Figma', licenca: 'Licença MIT', privacidade: 'Privacidade', embreve: 'Em breve', github: 'Instalar pelo GitHub',
@@ -322,7 +328,7 @@ const TEXTOS = {
     seguir: 'Seguir no',
   },
   es: {
-    portfolio: 'Ver', portfolio2: ' mi portafolio', eyebrow: 'Plugin gratuito para Figma · Código abierto',
+    portfolio: 'Ver mi portafolio', portfolioCurto: 'Ver portafolio', eyebrow: 'Plugin gratuito para Figma',
     titulo1: 'Edita imágenes en PhotoCraft', titulo2: 'sin salir de Figma.',
     sub: 'Selecciona una imagen, ábrela en un editor completo, con capas, máscaras y filtros, y pulsa ⌘S. Se actualiza en Figma, y la original queda guardada en la misma capa.',
     figma: 'Comunidad de Figma', licenca: 'Licencia MIT', privacidade: 'Privacidad', embreve: 'Próximamente', github: 'Instalar desde GitHub',
@@ -391,6 +397,23 @@ palco.addEventListener('focus', () => abrir(true));
 palco.addEventListener('blur', () => abrir(false));
 palco.addEventListener('click', () => abrir(!palco.classList.contains('aberto')));
 abrir(false);
+
+// Ajusta o tamanho da pilha ao espaço que sobra na tela, para a página caber sem rolagem.
+// A placa tem 300px; aberta, cada uma anda D na diagonal, o que na tela vira D * 1,414 * escala para o lado.
+function ajustar() {
+  if (celular.matches) return;
+  const r = palco.getBoundingClientRect();
+  const escala = Math.max(.4, Math.min(.72, (r.height - 120) / 300, r.width / 1300));
+  const passo = Math.min(360, Math.max(250, r.width / 3.4));
+  const d = passo / (1.4142 * escala);
+  const raiz = document.documentElement.style;
+  raiz.setProperty('--escala', escala.toFixed(3));
+  raiz.setProperty('--passo', passo.toFixed(0) + 'px');
+  palco.style.setProperty('--d', d.toFixed(1) + 'px');
+}
+ajustar();
+addEventListener('resize', ajustar);
+celular.addEventListener('change', () => { ajustar(); abrir(false); });
 </script>
 </body>
 </html>
