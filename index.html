@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>PhotoCraft on Figma — edit images without leaving Figma</title>
+<title>Edit in PhotoCraft · a free plugin for Figma</title>
 <meta name="description" content="Free Figma plugin: select an image, edit it in PhotoCraft without leaving Figma and save with ⌘S. Your original is kept.">
-<meta property="og:title" content="PhotoCraft on Figma">
+<meta property="og:title" content="Edit in PhotoCraft · a free plugin for Figma">
 <meta property="og:description" content="Free Figma plugin: edit images in PhotoCraft without leaving Figma. Save with ⌘S, your original is kept.">
 <meta property="og:url" content="https://raphaelareas.github.io/photocraft-on-figma/">
 <meta property="og:type" content="website">
@@ -89,7 +89,7 @@
   .numero span { display: block; font-size: 12.5px; color: var(--texto-3); }
 
   /* Palco 3D */
-  .palco { position: relative; height: 600px; display: grid; place-items: center; outline: none; }
+  .palco { position: relative; height: 660px; display: grid; place-items: center; outline: none; }
   .orbita { position: absolute; left: 50%; top: 50%; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .06);
     transform: translate(-50%, -50%) rotateX(68deg); }
   .orbita.o1 { width: 560px; height: 560px; }
@@ -115,15 +115,33 @@
     box-shadow: 0 0 40px var(--cor), inset 0 0 0 1px rgba(255, 255, 255, .15); }
   .placa .borda:nth-of-type(3) { transform: translateZ(-18px); }
   .placa .num { position: absolute; right: 26px; bottom: 22px; font: 700 34px/1 "Inter Tight", sans-serif; color: rgba(255, 255, 255, .07); }
-  .glifo { position: relative; width: 104px; height: 104px; border-radius: 28px; display: grid; place-items: center;
-    background: linear-gradient(135deg, var(--cor), color-mix(in srgb, var(--cor) 45%, #12121f));
-    box-shadow: 0 18px 40px -10px var(--cor), inset 0 1px 0 rgba(255, 255, 255, .35); transform: rotateZ(45deg); }
-  .glifo svg { width: 50px; height: 50px; color: #fff; }
+  /* Ícones "em pé" sobre cada placa, sempre de frente para quem olha (os logos não são distorcidos) */
+  .em-pe { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d;
+    transform: translateZ(2px) rotateZ(45deg) rotateX(-57deg); }
+  .app { position: absolute; left: -46px; bottom: 6px; width: 92px; height: 92px; border-radius: 22px; overflow: hidden;
+    display: grid; place-items: center; transition: transform .9s var(--ease);
+    box-shadow: 0 24px 40px -14px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .14), 0 0 40px -6px var(--cor);
+    animation: flutuar 5s ease-in-out infinite; }
+  .p2 .app { animation-delay: -1.6s; } .p3 .app { animation-delay: -3.2s; }
+  @keyframes flutuar { 50% { translate: 0 -6px; } }
+  .app::after { content: ''; position: absolute; inset: 0; border-radius: inherit;
+    background: linear-gradient(160deg, rgba(255, 255, 255, .28), transparent 42%); pointer-events: none; }
+  /* Nas camadas de baixo o ícone fica na ponta da frente, para não sumir atrás da camada de cima */
+  .p2 .em-pe, .p3 .em-pe { left: 30%; top: 70%; opacity: 0; transition: opacity .4s; }
+  .p2 .app, .p3 .app { scale: .72; transform-origin: 50% 100%; }
+  .palco.aberto .p2 .em-pe, .palco.aberto .p3 .em-pe { opacity: 1; transition: opacity .5s .35s; }
+  .app-figma { background: #fff; }
+  .app-figma svg { width: 34px; height: 51px; }
+  .app-pc img { width: 100%; height: 100%; display: block; }
+  .app-tecla { background: linear-gradient(180deg, #2a2b3f, #15151f); }
+  .tecla { font: 700 24px/1 "Inter Tight", Inter, sans-serif; color: #fff; letter-spacing: -.02em; }
+  .sombra { position: absolute; left: 50%; top: 50%; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(0, 0, 0, .55), transparent); }
   .p1 { --i: 2; --cor: #5b8cff; }
   .p2 { --i: 1; --cor: #8f6bff; }
   .p3 { --i: 0; --cor: #c77dff; }
 
-  .palco.aberto .placa { transform: translateZ(calc(var(--i) * 118px - 60px)); }
+  .palco.aberto .placa { transform: translateZ(calc(var(--i) * 172px - 120px)); }
 
   /* Cartões que explicam cada camada */
   .cartao { position: absolute; width: 250px; padding: 14px 16px 15px; border-radius: 16px;
@@ -140,9 +158,9 @@
     color: #fff; background: color-mix(in srgb, var(--cor) 35%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cor) 60%, transparent); }
   .cartao p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--texto-2); }
   .cartao::after { content: ''; position: absolute; top: 50%; width: 56px; border-top: 1px dashed color-mix(in srgb, var(--cor) 70%, transparent); }
-  .c1 { --cor: #5b8cff; right: 0; top: 70px; }
-  .c2 { --cor: #8f6bff; left: 0; top: 240px; }
-  .c3 { --cor: #c77dff; right: 0; top: 400px; }
+  .c1 { --cor: #5b8cff; right: 0; top: 40px; }
+  .c2 { --cor: #8f6bff; left: 0; top: 250px; }
+  .c3 { --cor: #c77dff; right: 0; top: 450px; }
   .c1::after, .c3::after { right: 100%; }
   .c2::after { left: 100%; }
   .dica { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px;
@@ -156,6 +174,7 @@
   .rodape a { color: var(--texto-2); }
   .rodape a:hover { color: var(--texto); }
   .amor { display: flex; align-items: center; gap: 8px; }
+  .aviso-marcas { flex-basis: 100%; margin: 4px 0 0; font-size: 11.5px; line-height: 1.55; color: var(--texto-3); max-width: 900px; }
 
   @media (max-width: 980px) {
     .hero { grid-template-columns: 1fr; min-height: 0; padding-top: 16px; }
@@ -164,7 +183,8 @@
     .orbita, .ponto, .dica { display: none; }
     .cartao { position: relative; inset: auto; width: 100%; max-width: 460px; opacity: 1; transform: none; margin-top: 12px; }
     .cartao::after { display: none; }
-    .palco.aberto .placa, .palco .placa { transform: translateZ(calc(var(--i) * 70px - 30px)); }
+    .palco.aberto .placa, .palco .placa { transform: translateZ(calc(var(--i) * 205px - 160px)); }
+    .cena { margin-top: 110px !important; margin-bottom: 80px !important; }
   }
   @media (max-width: 600px) {
     .pagina { padding: 0 16px; }
@@ -250,17 +270,14 @@
       <div class="cena" aria-hidden="true">
         <div class="pilha">
           <div class="placa p3"><i class="borda"></i><i class="borda"></i><i class="borda"></i>
-            <div class="face"><span class="num">03</span><div class="glifo">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10a2 2 0 0 1 2 2v16l-7-4.5L5 21V5a2 2 0 0 1 2-2z"/><path d="m9 9.5 2 2 4-4"/></svg>
-            </div></div></div>
+            <div class="face"><span class="num">03</span><span class="sombra"></span></div>
+            <div class="em-pe"><div class="app app-tecla"><span class="tecla" id="tecla3d">⌘S</span></div></div></div>
           <div class="placa p2"><i class="borda"></i><i class="borda"></i><i class="borda"></i>
-            <div class="face"><span class="num">02</span><div class="glifo">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v4"/><circle cx="8.5" cy="9" r="1.5"/><path d="M3 16l4-4 3 3"/><path d="M19.5 13.5l2 2-6 6h-2v-2z"/></svg>
-            </div></div></div>
+            <div class="face"><span class="num">02</span><span class="sombra"></span></div>
+            <div class="em-pe"><div class="app app-pc"><img src="site/photocraft-icon.png" alt=""></div></div></div>
           <div class="placa p1"><i class="borda"></i><i class="borda"></i><i class="borda"></i>
-            <div class="face"><span class="num">01</span><div class="glifo">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="13" height="11" rx="2"/><circle cx="7.5" cy="7" r="1.3"/><path d="m3 12 3.5-3 3 2.5"/><path d="m13 11 8 3-3.5 1.2L16 19z"/></svg>
-            </div></div></div>
+            <div class="face"><span class="num">01</span><span class="sombra"></span></div>
+            <div class="em-pe"><div class="app app-figma"><svg viewBox="0 0 38 57" aria-hidden="true"><path fill="#1abcfe" d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z"/><path fill="#0acf83" d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z"/><path fill="#ff7262" d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z"/><path fill="#f24e1e" d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z"/><path fill="#a259ff" d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z"/></svg></div></div></div>
         </div>
       </div>
 
@@ -277,13 +294,14 @@
       <span data-t="amor"></span> · <a href="https://raphaelareas.com/">@raphaelareas</a>
     </span>
     <span><span data-t="creditos"></span> <a href="https://github.com/raphaelareas/photocraft-on-figma" data-t="codigo"></a></span>
+    <p class="aviso-marcas" data-t="marcas"></p>
   </footer>
 </div>
 
 <script>
 const TEXTOS = {
   en: {
-    portfolio: 'View', portfolio2: ' my portfolio', eyebrow: 'Free Figma plugin · Open source',
+    portfolio: 'View', portfolio2: ' my portfolio', eyebrow: 'Free plugin for Figma · Open source',
     titulo1: 'Edit images in PhotoCraft', titulo2: 'without leaving Figma.',
     sub: 'Select an image, open it in a full editor with layers, masks and filters, and hit ⌘S. It updates in Figma, and your original stays safe in the same layer.',
     figma: 'Get it on Figma Community', embreve: 'Coming soon', github: 'Install from GitHub',
@@ -293,10 +311,11 @@ const TEXTOS = {
     c3t: 'Save, and it’s back', c3: 'The image updates in Figma. The original stays hidden in the same layer.',
     dica: 'Hover to see how it works', amor: 'Made with love and tokens',
     creditos: 'The editor is PhotoCraft, open source, by the ArtCraft team. This plugin is independent.', codigo: 'View the code',
+    marcas: 'A free, independent community project, made to help designers. Not affiliated with, sponsored or endorsed by Figma, Inc. or the ArtCraft team. Figma and the Figma logo are trademarks of Figma, Inc., used here only to indicate compatibility. The PhotoCraft icon is part of PhotoCraft, used under its MIT/Apache 2.0 license. All trademarks belong to their owners.',
     seguir: 'Follow on',
   },
   pt: {
-    portfolio: 'Ver', portfolio2: ' meu portfólio', eyebrow: 'Plugin gratuito para Figma · Código aberto',
+    portfolio: 'Ver', portfolio2: ' meu portfólio', eyebrow: 'Plugin gratuito para o Figma · Código aberto',
     titulo1: 'Edite imagens no PhotoCraft', titulo2: 'sem sair do Figma.',
     sub: 'Selecione uma imagem, abra num editor completo, com camadas, máscaras e filtros, e aperte ⌘S. Ela atualiza no Figma, e a original fica guardada na mesma camada.',
     figma: 'Instalar pela Comunidade do Figma', embreve: 'Em breve', github: 'Instalar pelo GitHub',
@@ -306,6 +325,7 @@ const TEXTOS = {
     c3t: 'Salve, e volta pro Figma', c3: 'A imagem atualiza no Figma. A original fica oculta na mesma camada.',
     dica: 'Passe o mouse para ver como funciona', amor: 'Feito com amor e tokens',
     creditos: 'O editor é o PhotoCraft, de código aberto, do time ArtCraft. Este plugin é independente.', codigo: 'Ver o código',
+    marcas: 'Projeto gratuito e independente, feito para ajudar a comunidade de design. Sem vínculo, patrocínio ou aprovação da Figma, Inc. nem do time ArtCraft. Figma e o logo do Figma são marcas da Figma, Inc., usadas aqui só para indicar compatibilidade. O ícone do PhotoCraft faz parte do PhotoCraft e é usado sob a licença MIT/Apache 2.0 dele. Todas as marcas pertencem aos seus donos.',
     seguir: 'Seguir no',
   },
   es: {
@@ -319,6 +339,7 @@ const TEXTOS = {
     c3t: 'Guarda, y vuelve a Figma', c3: 'La imagen se actualiza en Figma. La original queda oculta en la misma capa.',
     dica: 'Pasa el mouse para ver cómo funciona', amor: 'Hecho con amor y tokens',
     creditos: 'El editor es PhotoCraft, de código abierto, del equipo ArtCraft. Este plugin es independiente.', codigo: 'Ver el código',
+    marcas: 'Proyecto gratuito e independiente, hecho para ayudar a la comunidad de diseño. Sin vínculo, patrocinio ni aprobación de Figma, Inc. ni del equipo ArtCraft. Figma y el logo de Figma son marcas de Figma, Inc., usadas aquí solo para indicar compatibilidad. El ícono de PhotoCraft forma parte de PhotoCraft y se usa bajo su licencia MIT/Apache 2.0. Todas las marcas pertenecen a sus dueños.',
     seguir: 'Seguir en',
   },
 };
@@ -334,7 +355,7 @@ function aplicar(l) {
   document.getElementById('idioma').value = idioma;
   for (const el of document.querySelectorAll('[data-t]')) el.textContent = teclas(t[el.dataset.t]);
   for (const a of document.querySelectorAll('.rede')) a.title = a.ariaLabel = t.seguir + ' ' + a.dataset.titulo;
-  document.getElementById('atalho').textContent = WINDOWS ? 'Ctrl+S' : '⌘S';
+  document.getElementById('atalho').textContent = document.getElementById('tecla3d').textContent = WINDOWS ? 'Ctrl+S' : '⌘S';
   mostrarGithub();
 }
 

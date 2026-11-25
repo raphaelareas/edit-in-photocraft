@@ -1,4 +1,4 @@
-# PhotoCraft on Figma
+# Edit in PhotoCraft — a free plugin for Figma
 
 **English** · [Português](#português) · [Español](#español)
 
@@ -58,6 +58,14 @@ The editor's ⌘S saves a PSD. The plugin reads the final image inside the PSD a
   `LICENSE-APACHE`, `NOTICE`, `ATTRIBUTION.md`).
 - This plugin is independent: it is not made, sponsored or endorsed by the ArtCraft team or by Figma.
 - The plugin and bridge code (`plugin/`, `ponte.html`, `index.html`) is MIT licensed, see `LICENSE`.
+
+## Trademarks
+
+A free, independent community project, made to help designers. Not affiliated with, sponsored or
+endorsed by Figma, Inc. or the ArtCraft team. Figma and the Figma logo are trademarks of Figma, Inc.,
+used only to indicate compatibility. The PhotoCraft icon (`site/photocraft-icon.png`) is part of
+PhotoCraft and is used under its MIT/Apache 2.0 license (`site/LICENSE-photocraft-icon.txt`). All
+trademarks belong to their owners.
 
 Made with love and tokens.
 
