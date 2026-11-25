@@ -100,7 +100,7 @@
     animation: piscar 3.2s ease-in-out infinite; }
   @keyframes piscar { 50% { opacity: .35; } }
 
-  .cena { perspective: 1600px; width: 300px; height: 300px; }
+  .cena { perspective: 1600px; width: 300px; height: 300px; scale: .8; }
   .pilha { position: relative; width: 300px; height: 300px; transform-style: preserve-3d;
     transform: rotateX(57deg) rotateZ(-45deg); transition: transform .9s var(--ease); }
   .placa { position: absolute; inset: 0; border-radius: 34px; transform-style: preserve-3d;
@@ -144,10 +144,10 @@
   .cartao .chip { margin-left: auto; padding: 3px 8px; border-radius: 999px; font: 600 10.5px/1.4 Inter, sans-serif;
     color: #fff; background: color-mix(in srgb, var(--cor) 35%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cor) 60%, transparent); }
   .cartao p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--texto-2); }
-  .cartao::after { content: ''; position: absolute; top: 50%; width: 56px; border-top: 1px dashed color-mix(in srgb, var(--cor) 70%, transparent); }
-  .c1 { --cor: #5b8cff; right: 0; top: 20px; }
-  .c2 { --cor: #4f8dff; left: -40px; top: 390px; width: 250px; }
-  .c3 { --cor: #c77dff; right: 0; top: 420px; }
+  .cartao::after { content: ''; position: absolute; top: 50%; width: 30px; border-top: 1px dashed color-mix(in srgb, var(--cor) 70%, transparent); }
+  .c1 { --cor: #5b8cff; right: -40px; top: 124px; width: 230px; }
+  .c2 { --cor: #4f8dff; left: -60px; top: 245px; width: 215px; }
+  .c3 { --cor: #c77dff; right: -40px; top: 352px; width: 230px; }
   .c1::after, .c3::after { right: 100%; }
   .c2::after { left: 100%; }
   .dica { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 8px;
@@ -167,7 +167,7 @@
   @media (max-width: 980px) {
     .hero { grid-template-columns: 1fr; min-height: 0; padding-top: 16px; }
     .palco { height: auto; padding: 30px 0 20px; display: flex; flex-direction: column; align-items: center; }
-    .cena { transform: scale(.82); margin: 10px 0 -10px; }
+    .cena { transform: scale(.82); margin: 10px 0 -10px; scale: 1; }
     .orbita, .ponto, .dica { display: none; }
     .cartao { position: relative; inset: auto; width: 100%; max-width: 460px; opacity: 1; transform: none; margin-top: 12px; }
     .cartao::after { display: none; }
