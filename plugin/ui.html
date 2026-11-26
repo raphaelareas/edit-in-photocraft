@@ -74,15 +74,18 @@
   .quadro iframe { position: absolute; inset: 0; border: 0; width: 100%; height: 100%; }
   .carregando { position: absolute; inset: 0; display: grid; place-items: center; color: #8c8c8c; text-align: center; line-height: 1.6; }
   /* Convite */
-  #convite { align-items: center; text-align: center; justify-content: center; padding: 28px 28px 16px; }
-  #convite .avatar { width: 72px; height: 72px; margin-bottom: 14px; }
-  #convite h2 { font-size: 19px; font-weight: 650; letter-spacing: -.02em; margin: 0 0 6px; }
-  #convite p { color: var(--texto-2); margin: 0 0 18px; font-size: 12.5px; max-width: 280px; }
-  #convite .redes { gap: 12px; margin-bottom: 22px; }
+  #convite { align-items: center; text-align: center; justify-content: center; padding: 26px 28px 16px; }
+  #convite h2 { font-size: 36px; line-height: 1.1; font-weight: 700; letter-spacing: -.03em; margin: 0 0 18px; }
+  #convite .mensagem { margin: 0 0 18px; max-width: 300px; font-size: 13px; color: var(--texto-2); }
+  #convite .mensagem strong { display: block; font-size: 15px; font-weight: 600; color: var(--texto); margin-bottom: 2px; }
+  #convite .mensagem span { display: block; text-wrap: balance; }
+  #convite .redes { gap: 12px; margin-bottom: 18px; }
   #convite .redes a { width: 44px; height: 44px; }
   #convite .redes svg { width: 21px; height: 21px; }
+  #convite .nota { margin: 0 0 18px; max-width: 336px; padding: 10px 14px; text-wrap: balance; border-radius: 10px; font-size: 11.5px; line-height: 1.5;
+    color: var(--texto-2); background: var(--tecla); }
   #convite button { width: 200px; }
-  #convite .amor { margin-top: auto; padding-top: 14px; }
+  #convite .amor { margin-top: 0; padding-top: 18px; }
   #idioma { position: absolute; top: 18px; right: 20px; font: 11.5px -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     color: var(--texto-2); background: var(--card); border: 0; border-radius: 6px; padding: 3px 4px; box-shadow: var(--sombra); cursor: pointer; }
   #inicio { position: relative; }
@@ -156,10 +159,10 @@
 </section>
 
 <section id="convite" class="tela" hidden>
-  <img class="avatar" data-alt="fotoAlt" alt="" src="data:image/jpeg;base64,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">
   <h2 data-t="deuCerto"></h2>
-  <p data-t="convite"></p>
+  <p class="mensagem"><strong data-t="convite1"></strong><span data-t="convite2"></span></p>
   <div class="redes"></div>
+  <p class="nota" data-t="nota"></p>
   <button id="botaoConvite">Fechar</button>
   <div class="amor">
     <svg class="pixel" width="12" height="10" viewBox="0 0 7 6" aria-hidden="true" fill="#ff453a">
@@ -259,7 +262,8 @@ const TEXTOS = {
     estado: 'Edite e salve com ⌘S para atualizar no Figma.', concluir: 'Concluir',
     baixarPsd: 'Baixar PSD', dicaPsd: 'Salve com ⌘S primeiro. O PSD guarda as camadas no seu computador.', psdBaixado: '✓ PSD com camadas baixado.',
     carregando: 'Abrindo o PhotoCraft…<br>Na primeira vez pode levar alguns segundos.',
-    deuCerto: 'Deu certo! 🎉', convite: 'Curtiu o plugin? Me segue para ver as próximas ferramentas que eu criar.',
+    deuCerto: 'Deu certo! 🎉', convite1: 'Curtiu o plugin?', convite2: 'Me segue para ver as próximas ferramentas que eu criar.',
+    nota: 'Esta mensagem só aparece desta vez. Aproveite o plugin, e não deixe de me seguir nas redes para fortalecer o meu trabalho. 💙',
     fechar: 'Fechar', continuar: 'Continuar', atualizando: 'Atualizando no Figma…',
     atualizada: '✓ Atualizada no Figma às {h}. A original ficou guardada.',
     naoLi: 'Não consegui ler o arquivo salvo. Tente File > Export como PNG.',
@@ -274,7 +278,8 @@ const TEXTOS = {
     estado: 'Edit and save with ⌘S to update in Figma.', concluir: 'Done',
     baixarPsd: 'Download PSD', dicaPsd: 'Save with ⌘S first. The PSD keeps your layers on your computer.', psdBaixado: '✓ Layered PSD downloaded.',
     carregando: 'Opening PhotoCraft…<br>The first time may take a few seconds.',
-    deuCerto: 'It worked! 🎉', convite: 'Enjoying the plugin? Follow me to see the next tools I build.',
+    deuCerto: 'It worked! 🎉', convite1: 'Enjoying the plugin?', convite2: 'Follow me to see the next tools I build.',
+    nota: 'This message only shows once. Enjoy the plugin, and don’t forget to follow me to support my work. 💙',
     fechar: 'Close', continuar: 'Continue', atualizando: 'Updating in Figma…',
     atualizada: '✓ Updated in Figma at {h}. Your original is kept.',
     naoLi: 'Couldn’t read the saved file. Try File > Export as PNG.',
@@ -289,7 +294,8 @@ const TEXTOS = {
     estado: 'Edita y guarda con ⌘S para actualizar en Figma.', concluir: 'Listo',
     baixarPsd: 'Descargar PSD', dicaPsd: 'Guarda con ⌘S primero. El PSD conserva tus capas en tu computadora.', psdBaixado: '✓ PSD con capas descargado.',
     carregando: 'Abriendo PhotoCraft…<br>La primera vez puede tardar unos segundos.',
-    deuCerto: '¡Funcionó! 🎉', convite: '¿Te gustó el plugin? Sígueme para ver las próximas herramientas que cree.',
+    deuCerto: '¡Funcionó! 🎉', convite1: '¿Te gustó el plugin?', convite2: 'Sígueme para ver las próximas herramientas que cree.',
+    nota: 'Este mensaje solo aparece esta vez. Disfruta el plugin y no olvides seguirme en redes para apoyar mi trabajo. 💙',
     fechar: 'Cerrar', continuar: 'Continuar', atualizando: 'Actualizando en Figma…',
     atualizada: '✓ Actualizada en Figma a las {h}. La original se conserva.',
     naoLi: 'No pude leer el archivo guardado. Prueba File > Export como PNG.',

@@ -39,7 +39,7 @@ const imgs = () => no.fills.filter((p) => p.type === 'IMAGE').map((p) => p.image
   assert.deepEqual(imgs(), ['h1(oculta)', 'novo2']);
   // Concluir: mostra o convite (botão Fechar) e depois fecha
   await f.figma.ui.onmessage({ tipo: 'concluir' });
-  assert.equal(f.ultima().tela, 'convite'); assert.equal(f.ultima().depois, 'fechar'); assert.deepEqual(f.pos, [600, 100]); assert.equal(guardado.convite, true);
+  assert.equal(f.ultima().tela, 'convite'); assert.equal(f.ultima().depois, 'fechar'); assert.deepEqual(f.pos, [600, 80]); assert.equal(guardado.convite, true);
   await f.figma.ui.onmessage({ tipo: 'fechar' }); assert.equal(f.fechou, '');
   // 2a vez: abre direto no editor e continua trocando a mesma editada
   f = await rodar([no]);

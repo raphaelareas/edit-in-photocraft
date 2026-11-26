@@ -6,7 +6,7 @@ const TAMANHO = {
   boasvindas: { width: 480, height: 480 },
   sobre: { width: 480, height: 480 },
   editor: { width: 1280, height: 820 },
-  convite: { width: 400, height: 400 },
+  convite: { width: 400, height: 420 },
 };
 const AVISO_MS = 6000;
 
@@ -38,7 +38,7 @@ let idioma = 'en';
 const T = (k, v) => TEXTOS[idioma][k].replace(/\{(\w)\}/g, (_, x) => (v && v[x]) || '');
 const LOCAL = { pt: 'pt-BR', en: 'en-US', es: 'es-ES' };
 
-figma.showUI(__html__, Object.assign({ visible: false, themeColors: true, title: 'Editar no PhotoCraft' }, TAMANHO.boasvindas));
+figma.showUI(__html__, Object.assign({ visible: false, themeColors: true, title: 'Edit in PhotoCraft' }, TAMANHO.boasvindas));
 
 let alvo = null; // { no, hash, copia, nome }
 
