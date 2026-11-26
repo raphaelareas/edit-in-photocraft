@@ -80,7 +80,10 @@
     border-radius: 999px; white-space: nowrap; font: 600 15px Inter, system-ui, sans-serif; border: 0; cursor: pointer;
     transition: transform .2s var(--ease), box-shadow .2s, background .2s; }
   .btn svg { width: 18px; height: 18px; flex: none; }
-  .btn-figma { background: var(--grad); color: #fff; opacity: .5; cursor: not-allowed; }
+  .btn-figma { background: var(--grad); color: #fff; }
+  .btn-figma:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(143, 107, 255, .35); }
+  .btn-figma.desabilitado { opacity: .5; cursor: not-allowed; pointer-events: none; }
+  .btn-figma-caixa:has(.desabilitado) { cursor: not-allowed; }
   .selo { position: absolute; top: -10px; right: -8px; padding: 4px 9px; border-radius: 999px; background: #fff; color: #3b2a8c;
     font: 700 10.5px/1 Inter, system-ui, sans-serif; letter-spacing: .04em; text-transform: uppercase; box-shadow: 0 4px 14px rgba(0, 0, 0, .35); }
   .btn-figma-caixa { position: relative; display: inline-flex; }
@@ -243,10 +246,11 @@
     <p class="sub" data-t="sub"></p>
     <div class="acoes">
       <span class="btn-figma-caixa">
-        <button class="btn btn-figma" type="button" disabled aria-disabled="true">
+        <!-- Quando a Figma aprovar: tirar a classe "desabilitado", o aria-disabled, o tabindex e o selo "Em breve" -->
+        <a class="btn btn-figma desabilitado" href="https://www.figma.com/community/plugin/1707598559095356636" target="_blank" rel="noopener" aria-disabled="true" tabindex="-1">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5M5 20h14"/></svg>
           <span data-t="figma"></span>
-        </button>
+        </a>
         <span class="selo" data-t="embreve"></span>
       </span>
       <a class="btn btn-github" href="https://github.com/raphaelareas/edit-in-photocraft" target="_blank" rel="noopener">
