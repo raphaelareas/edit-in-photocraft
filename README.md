@@ -9,7 +9,7 @@ Your original is never lost: it stays in the same layer, hidden.
 Nothing to install besides the plugin. Works on Mac and Windows. Available in English, Portuguese
 and Spanish (it follows your computer's language).
 
-Made by [@raphaelareas](https://www.linkedin.com/in/raphaelareas/) ·
+Website: [raphaelareas.com/edit-in-photocraft](https://raphaelareas.com/edit-in-photocraft/) · Made by [@raphaelareas](https://www.linkedin.com/in/raphaelareas/) ·
 [LinkedIn](https://www.linkedin.com/in/raphaelareas/) · [Instagram](https://www.instagram.com/rapha.ux)
 
 ## How to use
@@ -49,6 +49,7 @@ your images: this site only delivers the editor's files, which run in your brows
 - `editor/`: the official web version of PhotoCraft (0.23.1), **unmodified**, as published by its
   authors. Only difference: a copy of `snippets/…/inline0.js` also in `app/snippets/`, because the
   official package for this version looks for the file there and doesn't ship it.
+- `index.html`, `privacidade.html`: redirect to the website at raphaelareas.com (the original page is kept in `pagina-original/`).
 - `ponte.html`: a page that opens the editor and talks to it: it hands over the image from Figma and,
   when you save, sends the file back to the plugin instead of downloading it.
 

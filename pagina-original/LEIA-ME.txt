@@ -1,0 +1,4 @@
+Cópia de referência da página de apresentação. A versão publicada mora no portfólio:
+https://raphaelareas.com/edit-in-photocraft/ (projeto do portfólio, hospedado na Vercel).
+Os caminhos site/... desta cópia apontam para a pasta ../site quando servida a partir da raiz;
+aqui ela é só registro. O GitHub Pages redireciona index.html e privacidade.html para o portfólio.
